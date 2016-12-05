@@ -1,13 +1,14 @@
 package io.klerch.alexa.translator.skill.model;
 
 import io.klerch.alexa.state.model.AlexaScope;
+import io.klerch.alexa.state.model.AlexaStateModel;
 import io.klerch.alexa.state.model.AlexaStateSave;
 import io.klerch.alexa.tellask.schema.annotation.AlexaSlotSave;
 import io.klerch.alexa.tellask.schema.type.AlexaOutputFormat;
 
 @AlexaStateSave(Scope = AlexaScope.USER)
-public class TextToSpeech {
-    @AlexaSlotSave(slotName = "term")
+public class TextToSpeech extends AlexaStateModel {
+    @AlexaSlotSave(slotName = "translatedText")
     private final String text;
     @AlexaSlotSave(slotName = "mp3", formatAs = AlexaOutputFormat.AUDIO)
     private final String mp3;

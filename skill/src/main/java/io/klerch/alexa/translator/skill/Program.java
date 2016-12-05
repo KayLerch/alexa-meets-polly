@@ -20,7 +20,7 @@ import java.net.URISyntaxException;
 
 public class Program {
     public static void main(String[] args) {
-            final String locale = "de-DE";
+            /*final String locale = "de-DE";
             final String term = "Wasser";
             final String language = "niederländisch";
 
@@ -43,6 +43,6 @@ public class Program {
                     e.printStackTrace();
             } catch (IOException e) {
                     e.printStackTrace();
-            }
+            }*/
     }
 }

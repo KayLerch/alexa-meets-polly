@@ -19,6 +19,7 @@ public class GoogleTranslation {
     private static Logger log = Logger.getLogger(GoogleTranslation.class.getName());
     private Translate translate;
     private final String locale;
+    private String languageCode;
     private final YamlReader yamlReader;
 
     public GoogleTranslation(final String locale) {
@@ -38,13 +39,14 @@ public class GoogleTranslation {
     }
 
     public String translate(final String term, final String language) {
-        final Optional<String> languageCode = this.yamlReader.getRandomUtterance(language);
+        final Optional<String> code = this.yamlReader.getRandomUtterance(language);
 
-        if (languageCode.isPresent()) {
+        if (code.isPresent()) {
+            this.languageCode = code.get();
             final Translate.Translations.List list;
             try {
                 list = translate.new Translations().list(
-                        Collections.singletonList(term), languageCode.get());
+                        Collections.singletonList(term), this.languageCode);
                 list.setKey(SkillConfig.getGoogleApiKey());
                 final TranslationsListResponse response = list.execute();
 
@@ -55,5 +57,9 @@ public class GoogleTranslation {
             }
         }
         return "";
+    }
+
+    public String getLanguageCode() {
+        return languageCode;
     }
 }
