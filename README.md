@@ -1,4 +1,6 @@
 # Alexa meets AWS Polly
+__Work in progress!!!__
+
 This project demonstrates an integration of AWS Polly into an Alexa skill which translates words into different languages.
 Polly is Amazon's new text-to-speech cloud service and is a perfect fit for Alexa skills aiming for playing back foreign voice.
 
