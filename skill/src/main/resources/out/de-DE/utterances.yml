@@ -1,0 +1,17 @@
+SayWelcome:
+  - "Hallo."
+
+SayTranslate:
+  - "{term} auf {language} heißt {mp3}"
+
+SayOk:
+  - "Ok"
+
+SayHelp:
+  Utterances:
+    - "Hier steht schon bald etwas."
+  Reprompts:
+    - "Sage zum Beispiel <p>Was heißt Auto auf Englisch</p>"
+
+SaySorry:
+  - "[Entschuldige|Sorry|Tut mir leid], etwas ist schief hier [gegangen|gelaufen|gewickelt]."

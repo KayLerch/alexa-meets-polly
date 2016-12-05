@@ -1,0 +1,4 @@
+Translate How to say {term} in {language
+Translate What is {term} in {language}
+Translate What does {term} mean in {language}
+Translate Say {term} in {language}
