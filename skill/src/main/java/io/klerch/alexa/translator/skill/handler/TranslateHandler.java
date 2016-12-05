@@ -8,6 +8,7 @@ import com.amazonaws.services.polly.model.SynthesizeSpeechResult;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import io.klerch.alexa.state.utils.AlexaStateException;
 import io.klerch.alexa.tellask.model.AlexaInput;
@@ -33,17 +34,14 @@ public class TranslateHandler extends AbstractIntentHandler {
         final String term = input.getSlotValue("term");
 
         final String translated = new GoogleTranslation(input.getLocale()).translate(term, lang);
-        final InputStream tts = new TTSPolly(input.getLocale()).textToSpeech(translated, lang);
+        final TTSPolly polly = new TTSPolly(input.getLocale());
+        final InputStream tts = polly.textToSpeech(translated, lang);
 
         final AmazonS3Client s3Client = new AmazonS3Client();
 
-        final String filePath = input.getLocale() + "_" + term + "_" + translated + ".mp3";
-        try {
-            final PutObjectRequest s3Put = new PutObjectRequest(SkillConfig.getS3BucketName(), filePath, IOUtils.toString(tts)).withCannedAcl(CannedAccessControlList.PublicRead);
-            s3Client.putObject(s3Put);
-        } catch (IOException e) {
-            throw new AlexaRequestHandlerException("Error uploading mp3.", e, input, null);
-        }
+        final String filePath = input.getLocale() + "_" + term + "_" + polly.getVoice() + ".mp3";
+        final PutObjectRequest s3Put = new PutObjectRequest(SkillConfig.getS3BucketName(), filePath, tts, new ObjectMetadata()).withCannedAcl(CannedAccessControlList.PublicRead);
+        s3Client.putObject(s3Put);
 
         final String mp3Url = SkillConfig.getS3BucketUrl() + filePath;
 
@@ -53,7 +51,7 @@ public class TranslateHandler extends AbstractIntentHandler {
             throw new AlexaRequestHandlerException("Error converting mp3.", e, input, null);
         }
 
-        return AlexaOutput.tell("Translate")
+        return AlexaOutput.tell("SayTranslate")
                 .putSlot("mp3", mp3Url, AlexaOutputFormat.AUDIO)
                 .putSlot("language", lang)
                 .putSlot("term", term)

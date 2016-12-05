@@ -12,6 +12,7 @@ import java.util.Optional;
 
 public class TTSPolly {
     private final String locale;
+    private String voice;
     private final YamlReader yamlReader;
     final AmazonPolly awsPolly;
 
@@ -26,15 +27,20 @@ public class TTSPolly {
         final Optional<String> voice = yamlReader.getRandomUtterance(language);
 
         if (voice.isPresent()) {
+            this.voice = voice.get();
             final SynthesizeSpeechRequest synthRequest = new SynthesizeSpeechRequest()
                     .withText(text)
                     .withOutputFormat(OutputFormat.Mp3)
-                    .withVoiceId(voice.get())
+                    .withVoiceId(this.voice)
                     .withTextType("text")
                     .withSampleRate("16000");
             final SynthesizeSpeechResult synthResult = awsPolly.synthesizeSpeech(synthRequest);
             return synthResult.getAudioStream();
         }
         return null;
+    }
+
+    public String getVoice() {
+        return voice;
     }
 }

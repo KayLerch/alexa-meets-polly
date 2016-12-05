@@ -2,7 +2,7 @@ SayWelcome:
   - "Hallo."
 
 SayTranslate:
-  - "{term} auf {language} heißt {mp3}"
+  - "{term} auf {language} lautet {mp3}"
 
 SayOk:
   - "Ok"
