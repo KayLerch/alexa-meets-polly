@@ -24,7 +24,9 @@ import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 
 @AlexaIntentListener(customIntents = "Translate")
 public class TranslateHandler extends AbstractIntentHandler {
@@ -39,9 +41,14 @@ public class TranslateHandler extends AbstractIntentHandler {
 
         final AmazonS3Client s3Client = new AmazonS3Client();
 
-        final String filePath = input.getLocale() + "_" + term + "_" + polly.getVoice() + ".mp3";
-        final PutObjectRequest s3Put = new PutObjectRequest(SkillConfig.getS3BucketName(), filePath, tts, new ObjectMetadata()).withCannedAcl(CannedAccessControlList.PublicRead);
-        s3Client.putObject(s3Put);
+        String filePath = "";
+        try {
+            filePath = input.getLocale() + "_" + URLEncoder.encode(term, "UTF-8") + "_" + polly.getVoice() + ".mp3";
+            final PutObjectRequest s3Put = new PutObjectRequest(SkillConfig.getS3BucketName(), filePath, tts, new ObjectMetadata()).withCannedAcl(CannedAccessControlList.PublicRead);
+            s3Client.putObject(s3Put);
+        } catch (final Exception e) {
+            throw new AlexaRequestHandlerException("Error uploading mp3.", e, input, null);
+        }
 
         final String mp3Url = SkillConfig.getS3BucketUrl() + filePath;
 
