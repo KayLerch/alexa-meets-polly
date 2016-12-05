@@ -17,11 +17,13 @@ import io.klerch.alexa.tellask.schema.type.AlexaOutputFormat;
 import io.klerch.alexa.tellask.util.AlexaRequestHandlerException;
 import io.klerch.alexa.translator.skill.SkillConfig;
 import io.klerch.alexa.translator.skill.util.GoogleTranslation;
+import io.klerch.alexa.translator.skill.util.Mp3Converter;
 import io.klerch.alexa.translator.skill.util.TTSPolly;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 
 @AlexaIntentListener(customIntents = "Translate")
 public class TranslateHandler extends AbstractIntentHandler {
@@ -40,11 +42,19 @@ public class TranslateHandler extends AbstractIntentHandler {
             final PutObjectRequest s3Put = new PutObjectRequest(SkillConfig.getS3BucketName(), filePath, IOUtils.toString(tts)).withCannedAcl(CannedAccessControlList.PublicRead);
             s3Client.putObject(s3Put);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new AlexaRequestHandlerException("Error uploading mp3.", e, input, null);
+        }
+
+        final String mp3Url = SkillConfig.getS3BucketUrl() + filePath;
+
+        try {
+            Mp3Converter.convertMp3(mp3Url);
+        } catch (URISyntaxException | IOException e) {
+            throw new AlexaRequestHandlerException("Error converting mp3.", e, input, null);
         }
 
         return AlexaOutput.tell("Translate")
-                .putSlot("mp3", SkillConfig.getS3BucketUrl() + filePath, AlexaOutputFormat.AUDIO)
+                .putSlot("mp3", mp3Url, AlexaOutputFormat.AUDIO)
                 .putSlot("language", lang)
                 .putSlot("term", term)
                 .build();

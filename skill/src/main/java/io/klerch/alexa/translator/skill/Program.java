@@ -21,7 +21,7 @@ import java.net.URISyntaxException;
 public class Program {
     public static void main(String[] args) {
             final String locale = "de-DE";
-            final String term = "Polizei";
+            final String term = "Kunst";
             final String language = "niederländisch";
 
             final String translated = new GoogleTranslation(locale).translate(term, language);

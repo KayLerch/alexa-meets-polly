@@ -6,7 +6,7 @@
 
     <groupId>io.klerch</groupId>
     <artifactId>alexa.translator.skill</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 
     <properties>
         <maven.surefire.failsafe.version>2.16</maven.surefire.failsafe.version>

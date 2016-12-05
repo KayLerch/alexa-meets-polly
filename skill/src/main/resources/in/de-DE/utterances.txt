@@ -1,6 +1,6 @@
-Translate Was heißt {term} in {language
+Translate Was heißt {term} in {language}
 Translate Was bedeutet {term} in {language}
 Translate Wie sagt man {term} in {language}
-Translate Was heißt {term} auf {language
+Translate Was heißt {term} auf {language}
 Translate Was bedeutet {term} auf {language}
 Translate Wie sagt man {term} auf {language}
