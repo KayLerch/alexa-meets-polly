@@ -27,7 +27,7 @@ public class Mp3Utils {
                 .setInput(url)
                 .overrideOutputFiles(true)
                 .addOutput("\"./" + mp3Filename + "\"")
-                .addExtraArgs("-af volume=10dB")
+                .addExtraArgs("-filter:a volume=10dB")
                 .setAudioCodec(AUDIO_MP3_CODEC)
                 .setAudioChannels(FFmpeg.AUDIO_MONO)
                 .setAudioBitRate(FFmpeg.AUDIO_SAMPLE_48000)
