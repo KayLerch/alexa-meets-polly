@@ -30,6 +30,8 @@ public class Mp3Utils {
                 .setAudioChannels(FFmpeg.AUDIO_MONO)
                 .setAudioBitRate(FFmpeg.AUDIO_SAMPLE_48000)
                 .setAudioSampleRate(FFmpeg.AUDIO_SAMPLE_16000)
+                // make it louder
+                .addExtraArgs("-af \"volume=20dB\"")
                 .done();
         final FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
         // Run a one-pass encode
