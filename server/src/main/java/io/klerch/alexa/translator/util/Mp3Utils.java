@@ -26,7 +26,7 @@ public class Mp3Utils {
         final FFmpegBuilder builder = new FFmpegBuilder()
                 .setInput(url)
                 .overrideOutputFiles(true)
-                .addOutput(mp3Filename)
+                .addOutput("./\"" + mp3Filename + "\"")
                 .addExtraArgs("-af volume=10dB")
                 .setAudioCodec(AUDIO_MP3_CODEC)
                 .setAudioChannels(FFmpeg.AUDIO_MONO)
@@ -36,6 +36,6 @@ public class Mp3Utils {
         final FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
         // Run a one-pass encode
         executor.createJob(builder).run();
-        return new File(mp3Filename);
+        return new File("./" + mp3Filename);
     }
 }
