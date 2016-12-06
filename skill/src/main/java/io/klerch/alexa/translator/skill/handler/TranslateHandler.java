@@ -2,6 +2,8 @@ package io.klerch.alexa.translator.skill.handler;
 
 import com.amazon.speech.ui.Card;
 import com.amazon.speech.ui.SimpleCard;
+import io.klerch.alexa.state.handler.AlexaSessionStateHandler;
+import io.klerch.alexa.state.handler.AlexaStateHandler;
 import io.klerch.alexa.state.utils.AlexaStateException;
 import io.klerch.alexa.tellask.model.AlexaInput;
 import io.klerch.alexa.tellask.model.AlexaOutput;
@@ -10,6 +12,7 @@ import io.klerch.alexa.tellask.util.AlexaRequestHandlerException;
 import io.klerch.alexa.translator.skill.model.TextToSpeech;
 import io.klerch.alexa.translator.skill.util.GoogleTranslation;
 import io.klerch.alexa.translator.skill.util.TTSPolly;
+import org.apache.log4j.Logger;
 
 import java.util.Optional;
 
@@ -17,6 +20,7 @@ import java.util.Optional;
 public class TranslateHandler extends AbstractIntentHandler {
     @Override
     public AlexaOutput handleRequest(final AlexaInput input) throws AlexaRequestHandlerException, AlexaStateException {
+
         final String lang = input.getSlotValue("language");
         final String term = input.getSlotValue("term");
 
@@ -31,9 +35,7 @@ public class TranslateHandler extends AbstractIntentHandler {
         if (tts.isPresent()) {
             return AlexaOutput.tell("SayTranslate")
                     .withCard(card)
-                    .putState(tts.get())
-                    .putSlot("text", term)
-                    .putSlot("language", lang)
+                    .putState(tts.get().withLanguage(lang))
                     .build();
         }
         return AlexaOutput.tell("SaySorry").build();

@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.util.Optional;
 
 public class TTSPolly {
@@ -47,18 +48,20 @@ public class TTSPolly {
                     .withSampleRate("16000");
             final SynthesizeSpeechResult synthResult = awsPolly.synthesizeSpeech(synthRequest);
 
-            // now upload stream to S3
-            final String filePath = locale + "-" + text.replace(" ", "_") + "-" + voice.get() + ".mp3";
-            final String mp3Url = SkillConfig.getS3BucketUrl() + filePath;
-
-            final PutObjectRequest s3Put = new PutObjectRequest(SkillConfig.getS3BucketName(), filePath, synthResult.getAudioStream(), new ObjectMetadata())
-                    .withCannedAcl(CannedAccessControlList.PublicRead);
-            awsS3.putObject(s3Put);
-
             // mp3 needs conversion to comply with MP3 format supported by Alexa service
             try {
+                // now upload stream to S3
+                final String filePath = locale + "-" + URLEncoder.encode(text.replace(" ", "_").replace("ü", "ue").replace("ö", "oe").replace("ä", "ae").replace("ß", "ss"), "UTF-8") + "-" + voice.get() + ".mp3";
+                final String mp3Url = SkillConfig.getS3BucketUrl() + filePath;
+
+                final PutObjectRequest s3Put = new PutObjectRequest(SkillConfig.getS3BucketName(), filePath, synthResult.getAudioStream(), new ObjectMetadata())
+                        .withCannedAcl(CannedAccessControlList.PublicRead);
+                awsS3.putObject(s3Put);
+
                 Mp3Converter.convertMp3(mp3Url);
-                return Optional.of(new TextToSpeech(text, mp3Url, synthRequest.getVoiceId()));
+                return Optional.of(TextToSpeech.create()
+                        .withText(text).withMp3(mp3Url).withVoice(synthRequest.getVoiceId())
+                        .withTranslatedText(translated).build());
             } catch (final IOException | URISyntaxException e) {
                 log.error("Error while converting mp3. " + e.getMessage());
             }

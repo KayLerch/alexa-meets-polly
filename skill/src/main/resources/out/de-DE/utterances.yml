@@ -14,4 +14,4 @@ SayHelp:
     - "Sage zum Beispiel <p>Was heißt Auto auf Englisch?</p>"
 
 SaySorry:
-  - "[Entschuldige|Sorry|Tut mir leid], etwas ist schief hier [gegangen|gelaufen|gewickelt]."
+  - "[Entschuldige|Sorry|Tut mir leid], etwas ist hier schief [gegangen|gelaufen]."
