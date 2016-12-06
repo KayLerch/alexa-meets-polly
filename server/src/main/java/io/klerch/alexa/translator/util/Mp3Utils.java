@@ -26,13 +26,12 @@ public class Mp3Utils {
         final FFmpegBuilder builder = new FFmpegBuilder()
                 .setInput(url)
                 .overrideOutputFiles(true)
+                .addExtraArgs("-af volume=15dB")
                 .addOutput(mp3Filename)
                 .setAudioCodec(AUDIO_MP3_CODEC)
                 .setAudioChannels(FFmpeg.AUDIO_MONO)
                 .setAudioBitRate(FFmpeg.AUDIO_SAMPLE_48000)
                 .setAudioSampleRate(FFmpeg.AUDIO_SAMPLE_16000)
-                // make it louder
-                .addExtraArgs("-af volume=15dB")
                 .done();
         final FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
         // Run a one-pass encode
