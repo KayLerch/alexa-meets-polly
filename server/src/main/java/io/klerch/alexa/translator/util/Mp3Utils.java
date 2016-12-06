@@ -4,6 +4,7 @@ import net.bramp.ffmpeg.FFmpeg;
 import net.bramp.ffmpeg.FFmpegExecutor;
 import net.bramp.ffmpeg.FFprobe;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
+import net.bramp.ffmpeg.options.AudioEncodingOptions;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,7 +32,7 @@ public class Mp3Utils {
                 .setAudioBitRate(FFmpeg.AUDIO_SAMPLE_48000)
                 .setAudioSampleRate(FFmpeg.AUDIO_SAMPLE_16000)
                 // make it louder
-                .addExtraArgs("-af \"volume=12dB\"")
+                .addExtraArgs("-af volume=15dB")
                 .done();
         final FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
         // Run a one-pass encode
