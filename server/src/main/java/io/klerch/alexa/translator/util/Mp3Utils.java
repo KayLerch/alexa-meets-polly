@@ -19,15 +19,15 @@ public class Mp3Utils {
     public static File convertUrlToMp3(final String url, final String mp3Filename) throws IOException {
         // will read out path to executables from environment variables FFMPEG and FFPROBE
         // take care of those variables being set in your system
-        final FFmpeg ffmpeg = new FFmpeg("/usr/bin/ffmpeg");
-        final FFprobe ffprobe = new FFprobe("/usr/bin/ffprobe");
+        final FFmpeg ffmpeg = new FFmpeg();
+        final FFprobe ffprobe = new FFprobe();
         // build a configuration according to what Alexa expects from an MP3 it supports
         // see: https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/speech-synthesis-markup-language-ssml-reference#audio
         final FFmpegBuilder builder = new FFmpegBuilder()
                 .setInput(url)
                 .overrideOutputFiles(true)
                 .addOutput(mp3Filename)
-                .addExtraArgs("-af volume=10dB")
+                .addExtraArgs("-vf volume=15dB")
                 .setAudioCodec(AUDIO_MP3_CODEC)
                 .setAudioChannels(FFmpeg.AUDIO_MONO)
                 .setAudioBitRate(FFmpeg.AUDIO_SAMPLE_48000)
