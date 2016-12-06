@@ -4,7 +4,11 @@ import net.bramp.ffmpeg.FFmpeg;
 import net.bramp.ffmpeg.FFmpegExecutor;
 import net.bramp.ffmpeg.FFprobe;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
+import net.bramp.ffmpeg.info.Codec;
+import net.bramp.ffmpeg.info.Format;
 import net.bramp.ffmpeg.options.AudioEncodingOptions;
+import net.bramp.ffmpeg.options.EncodingOptions;
+import net.bramp.ffmpeg.options.MainEncodingOptions;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,6 +24,18 @@ public class Mp3Utils {
         // will read out path to executables from environment variables FFMPEG and FFPROBE
         // take care of those variables being set in your system
         final FFmpeg ffmpeg = new FFmpeg();
+
+        System.out.println("Version: " + ffmpeg.version());
+        System.out.println("Path: " + ffmpeg.getPath());
+
+        for (final Codec codec : ffmpeg.codecs()) {
+            System.out.println("Codec: " + codec.getName());
+        }
+
+        for (final Format format : ffmpeg.formats()) {
+            System.out.println("Format: " + format.getName());
+        }
+
         final FFprobe ffprobe = new FFprobe();
         // build a configuration according to what Alexa expects from an MP3 it supports
         // see: https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/speech-synthesis-markup-language-ssml-reference#audio
@@ -27,12 +43,13 @@ public class Mp3Utils {
                 .setInput(url)
                 .overrideOutputFiles(true)
                 .addOutput(mp3Filename)
-                .addExtraArgs("-vf volume=15dB")
+                .addExtraArgs("-af volume=15dB")
                 .setAudioCodec(AUDIO_MP3_CODEC)
                 .setAudioChannels(FFmpeg.AUDIO_MONO)
                 .setAudioBitRate(FFmpeg.AUDIO_SAMPLE_48000)
                 .setAudioSampleRate(FFmpeg.AUDIO_SAMPLE_16000)
                 .done();
+
         final FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
         // Run a one-pass encode
         executor.createJob(builder).run();
