@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 
 public class GoogleTranslation {
     private static Logger log = Logger.getLogger(GoogleTranslation.class.getName());
-    private Translate translate;
+    private Translate translator;
     private final String locale;
     private String languageCode;
     private final YamlReader yamlReader;
@@ -28,7 +28,7 @@ public class GoogleTranslation {
         this.yamlReader = new YamlReader(reader, locale);
 
         try {
-            this.translate = new Translate.Builder(
+            this.translator = new Translate.Builder(
                     GoogleNetHttpTransport.newTrustedTransport(),
                     GsonFactory.getDefaultInstance(), null)
                     .setApplicationName(SkillConfig.getGoogleProjectName())
@@ -38,25 +38,32 @@ public class GoogleTranslation {
         }
     }
 
-    public String translate(final String term, final String language) {
-        final Optional<String> code = this.yamlReader.getRandomUtterance(language);
+    public Optional<String> translate(final String term, final String language) {
+        final Optional<String> code = this.yamlReader.getRandomUtterance(language.replace(" ", "_"));
+        final String sourceCode = locale.split("-")[0];
 
         if (code.isPresent()) {
+            // if source and target language are the same return original term
+            if (code.get().equalsIgnoreCase(sourceCode)) {
+                return Optional.of(term);
+            }
+
             this.languageCode = code.get();
-            final Translate.Translations.List list;
             try {
-                list = translate.new Translations().list(
+                final Translate.Translations.List list = translator.new Translations().list(
                         Collections.singletonList(term), this.languageCode);
                 list.setKey(SkillConfig.getGoogleApiKey());
+                list.setSource(sourceCode);
                 final TranslationsListResponse response = list.execute();
 
-                return !response.isEmpty() && !response.getTranslations().isEmpty() ?
-                        response.getTranslations().get(0).getTranslatedText() : "";
+                if (!response.isEmpty() && !response.getTranslations().isEmpty()) {
+                    return Optional.of(response.getTranslations().get(0).getTranslatedText());
+                }
             } catch (IOException e) {
                 log.severe(e.getMessage());
             }
         }
-        return "";
+        return Optional.empty();
     }
 
     public String getLanguageCode() {

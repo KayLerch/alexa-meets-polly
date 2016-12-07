@@ -1,23 +1,23 @@
-danish: DA
-dutch: NL
-english: EN
-british: EN
-british english: EN
-american: EN
-american english: EN
-australian: EN
-australian english: EN
-welsh: EN
-french: FR
-german: DE
-icelandic: IS
-italian: IT
-japanese: JA
-norwegian: NO
-polish: PL
-portugese: PT-PT
-romanian: RO
-russian: RU
-spanish: ES
-swedish: SV
-turkish: TR
+danish: "DA"
+dutch: "NL"
+english: "EN"
+british: "EN"
+british_english: "EN"
+american: "EN"
+american_english: "EN"
+australian: "EN"
+australian_english: "EN"
+welsh: "EN"
+french: "FR"
+german: "DE"
+icelandic: "IS"
+italian: "IT"
+japanese: "JA"
+norwegian: "NO"
+polish: "PL"
+portugese: "PT-PT"
+romanian: "RO"
+russian: "RU"
+spanish: "ES"
+swedish: "SV"
+turkish: "TR"

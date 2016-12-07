@@ -4,6 +4,9 @@ Translate Wie sagt man {term} in {language}
 Translate Was heißt {term} auf {language}
 Translate Was bedeutet {term} auf {language}
 Translate Wie sagt man {term} auf {language}
+Translate Was ist {term} auf {language}
+Translate Was ist {term} auf {language}
+Translate Wie ist {term} auf {language}
 Translate was {term} auf {language} heißt
 Translate was {term} auf {language} bedeutet
 Translate was {term} in {language} heißt
@@ -13,3 +16,4 @@ Translate wie {term} auf {language} bedeutet
 Translate wie {term} in {language} heißt
 Translate wie {term} in {language} bedeutet
 Translate nach {term} in {language}
+Translate nach {term} auf {language}

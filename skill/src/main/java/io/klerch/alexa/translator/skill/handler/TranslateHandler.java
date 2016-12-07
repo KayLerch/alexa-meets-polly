@@ -20,24 +20,31 @@ import java.util.Optional;
 public class TranslateHandler extends AbstractIntentHandler {
     @Override
     public AlexaOutput handleRequest(final AlexaInput input) throws AlexaRequestHandlerException, AlexaStateException {
-
         final String lang = input.getSlotValue("language");
         final String term = input.getSlotValue("term");
 
+        final TTSPolly ttsPolly = new TTSPolly(input.getLocale(), lang);
+
         // translate term
-        final String translated = new GoogleTranslation(input.getLocale()).translate(term, lang);
-        // translated term to speech
-        final Optional<TextToSpeech> tts = new TTSPolly(input.getLocale()).textToSpeech(term, translated, lang);
+        final Optional<String> translated = new GoogleTranslation(input.getLocale()).translate(term, lang);
 
-        final Card card = new SimpleCard();
-        card.setTitle(term + " -> " + translated);
+        if (translated.isPresent()) {
+            // translated term to speech
+            final Optional<TextToSpeech> tts = ttsPolly.textToSpeech(term, translated.get());
 
-        if (tts.isPresent()) {
-            return AlexaOutput.tell("SayTranslate")
-                    .withCard(card)
-                    .putState(tts.get().withLanguage(lang))
-                    .build();
+            if (tts.isPresent()) {
+                final Card card = new SimpleCard();
+                card.setTitle(term + " -> " + translated.get());
+
+                return AlexaOutput.tell("SayTranslate")
+                        .withCard(card)
+                        .putState(tts.get().withLanguage(lang))
+                        .build();
+            }
         }
-        return AlexaOutput.tell("SaySorry").build();
+        return AlexaOutput.tell("SayNoTranslation")
+                .putSlot("text", term)
+                .putSlot("language", lang)
+                .build();
     }
 }

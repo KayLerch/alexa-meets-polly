@@ -24,21 +24,26 @@ public class TTSPolly {
     private static final Logger log = Logger.getLogger(TTSPolly.class);
 
     private final String locale;
+    private final String language;
     private final YamlReader yamlReader;
-    final AmazonPolly awsPolly;
-    final AmazonS3Client awsS3;
+    private final AmazonPolly awsPolly;
+    private final AmazonS3Client awsS3;
+    private final Optional<String> voice;
 
-    public TTSPolly(final String locale) {
+    public TTSPolly(final String locale, final String language) {
         this.locale = locale;
+        this.language = language;
+
         final ResourceUtteranceReader reader = new ResourceUtteranceReader("/out", "/voices.yml");
         this.yamlReader = new YamlReader(reader, locale);
         this.awsPolly = new AmazonPollyClient();
         this.awsS3 = new AmazonS3Client();
+
+        voice = yamlReader.getRandomUtterance(language.replace(" ", "_"));
+
     }
 
-    public Optional<TextToSpeech> textToSpeech(final String text, final String translated, final String language) {
-        final Optional<String> voice = yamlReader.getRandomUtterance(language);
-
+    public Optional<TextToSpeech> textToSpeech(final String text, final String translated) {
         if (voice.isPresent()) {
             final SynthesizeSpeechRequest synthRequest = new SynthesizeSpeechRequest()
                     .withText(translated)
@@ -48,7 +53,6 @@ public class TTSPolly {
                     .withSampleRate("16000");
             final SynthesizeSpeechResult synthResult = awsPolly.synthesizeSpeech(synthRequest);
 
-            // mp3 needs conversion to comply with MP3 format supported by Alexa service
             try {
                 // now upload stream to S3
                 final String filePath = locale + "-" + URLEncoder.encode(text.replace(" ", "_").replace("ü", "ue").replace("ö", "oe").replace("ä", "ae").replace("ß", "ss"), "UTF-8") + "-" + voice.get() + ".mp3";
@@ -58,14 +62,30 @@ public class TTSPolly {
                         .withCannedAcl(CannedAccessControlList.PublicRead);
                 awsS3.putObject(s3Put);
 
-                Mp3Converter.convertMp3(mp3Url);
-                return Optional.of(TextToSpeech.create()
-                        .withText(text).withMp3(mp3Url).withVoice(synthRequest.getVoiceId())
-                        .withTranslatedText(translated).build());
+                // mp3 needs conversion to comply with MP3 format supported by Alexa service
+                final String mp3ConvertedUrl = Mp3Converter.convertMp3(mp3Url);
+
+                if (mp3ConvertedUrl != null && !mp3ConvertedUrl.isEmpty()) {
+                    return Optional.of(TextToSpeech.create()
+                            .withText(text).withMp3(mp3ConvertedUrl).withVoice(synthRequest.getVoiceId())
+                            .withTranslatedText(translated).build());
+                }
             } catch (final IOException | URISyntaxException e) {
                 log.error("Error while converting mp3. " + e.getMessage());
             }
         }
         return Optional.empty();
+    }
+
+    public String getLocale() {
+        return locale;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public String getVoice() {
+        return this.voice.orElse("");
     }
 }

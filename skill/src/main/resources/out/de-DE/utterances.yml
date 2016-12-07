@@ -4,6 +4,9 @@ SayWelcome:
 SayTranslate:
   - "{text} [auf|in] {language} [lautet|bedeutet|heißt|klingt so|hört sich so an] {mp3}"
 
+SayNoTranslation:
+  - "Entschuldige, aber {text} konnte ich nicht nach {language} übersetzen."
+
 SayOk:
   - "Ok"
 
