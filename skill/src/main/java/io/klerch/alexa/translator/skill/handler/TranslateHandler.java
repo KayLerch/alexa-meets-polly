@@ -2,8 +2,7 @@ package io.klerch.alexa.translator.skill.handler;
 
 import com.amazon.speech.ui.Card;
 import com.amazon.speech.ui.SimpleCard;
-import io.klerch.alexa.state.handler.AlexaSessionStateHandler;
-import io.klerch.alexa.state.handler.AlexaStateHandler;
+import com.amazonaws.util.StringUtils;
 import io.klerch.alexa.state.utils.AlexaStateException;
 import io.klerch.alexa.tellask.model.AlexaInput;
 import io.klerch.alexa.tellask.model.AlexaOutput;
@@ -18,10 +17,14 @@ import java.util.Optional;
 
 @AlexaIntentListener(customIntents = "Translate")
 public class TranslateHandler extends AbstractIntentHandler {
+    private static final Logger log = Logger.getLogger(TranslateHandler.class);
+
     @Override
     public AlexaOutput handleRequest(final AlexaInput input) throws AlexaRequestHandlerException, AlexaStateException {
-        final String lang = input.getSlotValue("language");
+        final String lang = StringUtils.lowerCase(input.getSlotValue("language"));
         final String term = input.getSlotValue("term");
+
+        log.info("Translating '" + term + "' into '" + lang + "'");
 
         final TTSPolly ttsPolly = new TTSPolly(input.getLocale(), lang);
 
@@ -40,7 +43,11 @@ public class TranslateHandler extends AbstractIntentHandler {
                         .withCard(card)
                         .putState(tts.get().withLanguage(lang))
                         .build();
+            } else {
+                log.warn("Did not get result of text-to-speech.");
             }
+        } else {
+            log.warn("Did not get result of translation.");
         }
         return AlexaOutput.tell("SayNoTranslation")
                 .putSlot("text", term)
