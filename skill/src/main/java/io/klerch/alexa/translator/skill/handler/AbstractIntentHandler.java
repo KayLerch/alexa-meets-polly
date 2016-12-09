@@ -11,8 +11,10 @@ import io.klerch.alexa.tellask.util.AlexaRequestHandlerException;
 import io.klerch.alexa.translator.skill.model.TextToSpeech;
 import io.klerch.alexa.translator.skill.util.GoogleTranslation;
 import io.klerch.alexa.translator.skill.util.TTSPolly;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.log4j.Logger;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Optional;
 
 abstract class AbstractIntentHandler implements AlexaIntentHandler {
@@ -52,8 +54,9 @@ abstract class AbstractIntentHandler implements AlexaIntentHandler {
         final Optional<String> translated = new GoogleTranslation(input.getLocale()).translate(text, lang);
 
         if (translated.isPresent()) {
+            final String translatedText = StringEscapeUtils.unescapeHtml4(translated.get());
             // translated term to speech
-            final Optional<TextToSpeech> tts = ttsPolly.textToSpeech(text, translated.get());
+            final Optional<TextToSpeech> tts = ttsPolly.textToSpeech(text, translatedText);
 
             if (tts.isPresent()) {
                 final AWSDynamoStateHandler dynamoHandler = new AWSDynamoStateHandler(input.getSessionStateHandler().getSession());
@@ -61,7 +64,7 @@ abstract class AbstractIntentHandler implements AlexaIntentHandler {
                 tts.get().withLanguage(lang).withHandler(dynamoHandler);
                 return sayTranslate(tts.get());
             } else {
-                log.warn(String.format("Did not get result of text-to-speech for '$1%s'", translated.get()));
+                log.warn(String.format("Did not get result of text-to-speech for '$1%s'", translatedText));
             }
         } else {
             log.warn(String.format("Did not get result of translation for '$1%s' from '$2%s' to '$3%s'.", text, input.getLocale(), lang));
