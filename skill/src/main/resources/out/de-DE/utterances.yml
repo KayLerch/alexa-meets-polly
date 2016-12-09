@@ -10,6 +10,9 @@ SayNoTranslation:
 SayOk:
   - "Ok"
 
+SayNothingToRepeat:
+  - "[Entschuldige|Sorry|Tut mir leid], es gibt für mich nichts zum Wiederholen. Sobald ich etwas für dich übersetzt habe, merke ich es mir und wiederhole später gern."
+
 SayHelp:
   Utterances:
     - "Ich kann dir viele Wörter deiner Sprache in fremde Sprachen übersetzen. Sage dazu beispielsweise <p>Was heißt Guten Tag auf Russisch?</p>"

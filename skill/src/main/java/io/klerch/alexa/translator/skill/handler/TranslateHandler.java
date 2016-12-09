@@ -1,8 +1,6 @@
 package io.klerch.alexa.translator.skill.handler;
 
-import com.amazon.speech.ui.Card;
-import com.amazon.speech.ui.SimpleCard;
-import com.amazonaws.util.StringUtils;
+import io.klerch.alexa.state.handler.AWSDynamoStateHandler;
 import io.klerch.alexa.state.utils.AlexaStateException;
 import io.klerch.alexa.tellask.model.AlexaInput;
 import io.klerch.alexa.tellask.model.AlexaOutput;
@@ -21,36 +19,40 @@ public class TranslateHandler extends AbstractIntentHandler {
 
     @Override
     public AlexaOutput handleRequest(final AlexaInput input) throws AlexaRequestHandlerException, AlexaStateException {
-        final String lang = StringUtils.lowerCase(input.getSlotValue("language"));
-        final String term = input.getSlotValue("term");
+        final StringBuilder sb = new StringBuilder();
 
-        log.info("Translating '" + term + "' into '" + lang + "'");
+        if (input.hasSlotNotBlank("termA")) {
+            sb.append(input.getSlotValue("termA"));
+        }
+        if (input.hasSlotNotBlank("termB")) {
+            sb.append(" ").append(input.getSlotValue("termB"));
+        }
+
+        final String lang = input.getSlotValue("language");
+        final String text = sb.toString();
 
         final TTSPolly ttsPolly = new TTSPolly(input.getLocale(), lang);
 
         // translate term
-        final Optional<String> translated = new GoogleTranslation(input.getLocale()).translate(term, lang);
+        final Optional<String> translated = new GoogleTranslation(input.getLocale()).translate(text, lang);
 
         if (translated.isPresent()) {
             // translated term to speech
-            final Optional<TextToSpeech> tts = ttsPolly.textToSpeech(term, translated.get());
+            final Optional<TextToSpeech> tts = ttsPolly.textToSpeech(text, translated.get());
 
             if (tts.isPresent()) {
-                final Card card = new SimpleCard();
-                card.setTitle(term + " -> " + translated.get());
-
-                return AlexaOutput.tell("SayTranslate")
-                        .withCard(card)
-                        .putState(tts.get().withLanguage(lang))
-                        .build();
+                final AWSDynamoStateHandler dynamoHandler = new AWSDynamoStateHandler(input.getSessionStateHandler().getSession());
+                // set language and handler to keep in mind all information related to last translation
+                tts.get().withLanguage(lang).withHandler(dynamoHandler);
+                return sayTranslate(tts.get());
             } else {
-                log.warn("Did not get result of text-to-speech.");
+                log.warn(String.format("Did not get result of text-to-speech for '$1%s'", translated.get()));
             }
         } else {
-            log.warn("Did not get result of translation.");
+            log.warn(String.format("Did not get result of translation for '$1%s' from '$2%s' to '$3%s'.", text, input.getLocale(), lang));
         }
         return AlexaOutput.tell("SayNoTranslation")
-                .putSlot("text", term)
+                .putSlot("text", text)
                 .putSlot("language", lang)
                 .build();
     }

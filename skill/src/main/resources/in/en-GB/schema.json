@@ -10,10 +10,17 @@
       "intent": "AMAZON.StopIntent"
     },
     {
+      "intent": "AMAZON.RepeatIntent"
+    },
+    {
       "intent": "Translate",
       "slots": [
         {
-          "name": "term",
+          "name": "termA",
+          "type": "SupportedTerms"
+        },
+        {
+          "name": "termB",
           "type": "SupportedTerms"
         },
         {

@@ -39,7 +39,7 @@ public class GoogleTranslation {
     }
 
     public Optional<String> translate(final String term, final String language) {
-        final Optional<String> code = this.yamlReader.getRandomUtterance(language.replace(" ", "_"));
+        final Optional<String> code = language != null ? this.yamlReader.getRandomUtterance(language.toLowerCase().replace(" ", "_")) : Optional.empty();
         final String sourceCode = locale.split("-")[0];
 
         if (code.isPresent()) {

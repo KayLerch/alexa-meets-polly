@@ -2,13 +2,16 @@ SayWelcome:
   - "Hi. What do you want me to translate?"
 
 SayTranslate:
-  - "{text} in {language} [means|is|sounds like] {mp3}"
+  - "{text} in {language} [is|translates to] {mp3}"
 
 SayNoTranslation:
   - "Sorry, I [could not|was not able to] translate {text} into {language}."
 
 SayOk:
   - "Ok"
+
+SayNothingToRepeat:
+  - "[Excuse me|Sorry|I am sorry], but there is nothing for me to repeat. Let me translate something for you and I will keep it in mind for later repeating."
 
 SayHelp:
   Utterances:
@@ -17,4 +20,4 @@ SayHelp:
     - "Say something like <p>What does Good evening mean in russian?</p>"
 
 SaySorry:
-  - "[Excuse me|Sorry|I am sorry], an error occured."
+  - "[Excuse me|Sorry|I am sorry], an error occurred."

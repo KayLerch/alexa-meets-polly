@@ -1,4 +1,7 @@
-Translate What is {term} in {language}
-Translate How to say {term} in {language}
-Translate What does {term} mean in {language}
-Translate How does {term} sound in {language}
+Translate what is {termA} in {language}
+Translate for {termA} in {language}
+Translate {termA} in {language}
+
+Translate what is {termA} {termB} in {language}
+Translate for {termA} {termB} in {language}
+Translate {termA} {termB} in {language}

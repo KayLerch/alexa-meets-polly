@@ -39,7 +39,7 @@ public class TTSPolly {
         this.awsPolly = new AmazonPollyClient();
         this.awsS3 = new AmazonS3Client();
 
-        voice = yamlReader.getRandomUtterance(language.replace(" ", "_"));
+        voice = language != null ? yamlReader.getRandomUtterance(language.toLowerCase().replace(" ", "_")) : Optional.empty();
 
     }
 
