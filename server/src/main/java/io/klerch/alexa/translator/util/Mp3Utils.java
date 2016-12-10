@@ -37,7 +37,9 @@ public class Mp3Utils {
 
     public static File convertUrlToMp3Cmd(final String url) throws IOException, InterruptedException {
         final String mp3Filename = URLEncoder.encode(url.substring(url.lastIndexOf("/") + 1), "UTF-8");
-        final Process p = Runtime.getRuntime().exec("ffmpeg -i \"" + url + "\" -ac 2 -codec:a libmp3lame -b:a 48k -ar 16000 " + mp3Filename);
+        final String cmd = "ffmpeg -i \"" + url + "\" -ac 2 -codec:a libmp3lame -b:a 48k -ar 16000 " + mp3Filename;
+        System.out.println(cmd);
+        final Process p = Runtime.getRuntime().exec(cmd);
         p.waitFor();
 
         final BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
