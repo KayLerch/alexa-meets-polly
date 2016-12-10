@@ -24,8 +24,6 @@ public class Mp3Utils {
                 .setInput(url)
                 .overrideOutputFiles(true)
                 .addOutput(mp3Filename)
-                // unfortunately that doesn't work with bramps ffmpeg wrapper
-                // .addExtraArgs("-af volume=15dB")
                 .setAudioCodec(AUDIO_MP3_CODEC)
                 .setAudioQuality(100)
                 .setAudioChannels(FFmpeg.AUDIO_MONO)
@@ -40,7 +38,7 @@ public class Mp3Utils {
     }
 
     public static File convertUrlToMp3Manual(final String url, final String mp3Filename) throws IOException, InterruptedException {
-        final Process p = Runtime.getRuntime().exec("ffmpeg -i " + url + " -ac 2 -codec:a libmp3lame -b:a 48k -ar 16000 -af volume=15dB " + mp3Filename);
+        final Process p = Runtime.getRuntime().exec("ffmpeg -i " + url + " -ac 2 -codec:a libmp3lame -b:a 48k -ar 16000 " + mp3Filename);
         p.waitFor();
 
         final BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));

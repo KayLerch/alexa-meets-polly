@@ -23,9 +23,9 @@ public class ConvertService {
     @Produces(MediaType.APPLICATION_JSON)
     public String getMorse(@QueryParam("mp3") String mp3Url) {
         try {
-            final File mp3File = Mp3Utils.convertUrlToMp3Manual(mp3Url, mp3Url.substring(mp3Url.lastIndexOf("/") + 1));
+            final File mp3File = Mp3Utils.convertUrlToMp3(mp3Url, mp3Url.substring(mp3Url.lastIndexOf("/") + 1));
             return s3Utils.uploadFileToS3(mp3File, mp3File.getName());
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return "";
