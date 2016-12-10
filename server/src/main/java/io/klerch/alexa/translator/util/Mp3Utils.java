@@ -20,7 +20,7 @@ public class Mp3Utils {
         // build a configuration according to what Alexa expects from an MP3 it supports
         // see: https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/speech-synthesis-markup-language-ssml-reference#audio
         final FFmpegBuilder builder = new FFmpegBuilder()
-                .setInput("\"" + url + "\"")
+                .setInput(url)
                 .overrideOutputFiles(true)
                 .addOutput(mp3Filename)
                 .setAudioCodec(AUDIO_MP3_CODEC)
