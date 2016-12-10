@@ -14,12 +14,11 @@ import io.klerch.alexa.tellask.util.resource.ResourceUtteranceReader;
 import io.klerch.alexa.tellask.util.resource.YamlReader;
 import io.klerch.alexa.translator.skill.SkillConfig;
 import io.klerch.alexa.translator.skill.model.TextToSpeech;
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.Validate;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.net.URLEncoder;
 import java.util.Optional;
 
 public class TTSPolly {
@@ -30,7 +29,7 @@ public class TTSPolly {
     private final YamlReader yamlReader;
     private final AmazonPolly awsPolly;
     private final AmazonS3Client awsS3;
-    private final Optional<String> voice;
+    private final String voiceId;
 
     public TTSPolly(final String locale, final String language) {
         this.locale = locale;
@@ -41,59 +40,69 @@ public class TTSPolly {
         this.awsPolly = new AmazonPollyClient();
         this.awsS3 = new AmazonS3Client();
 
-        voice = language != null ? yamlReader.getRandomUtterance(language.toLowerCase().replace(" ", "_")) : Optional.empty();
-
+        voiceId = language != null ? yamlReader.getRandomUtterance(language.toLowerCase().replace(" ", "_")).orElse("") : "";
+        Validate.notBlank(voiceId, "No voiceId is associated with given language.");
     }
 
-    public Optional<TextToSpeech> textToSpeech(final String text, final String translated) {
-        if (voice.isPresent()) {
-            final String ssml = String.format("<speak><prosody rate='x-slow' volume='x-loud'>%1$s</prosody></speak>", translated);
+    private Optional<TextToSpeech> getMp3UrlOfPreviousTTS(final String text) {
+        return awsS3.doesObjectExist(SkillConfig.getS3BucketName(), getMp3Path(text)) ?
+                Optional.of(getTTS(text)) : Optional.empty();
+    }
+
+    public Optional<TextToSpeech> textToSpeech(final String text) {
+        Optional<TextToSpeech> tts = getMp3UrlOfPreviousTTS(text);
+        // if there was a previous tts for this text return immediately
+        if (tts.isPresent()) return tts;
+
+        // translate term
+        final Optional<String> translated = new GoogleTranslation(locale).translate(text, language);
+
+        if (translated.isPresent()) {
+            final String ssml = String.format("<speak><prosody rate='x-slow' volume='x-loud'>%1$s</prosody></speak>", translated.get());
             final SynthesizeSpeechRequest synthRequest = new SynthesizeSpeechRequest()
                     .withText(ssml)
                     .withOutputFormat(OutputFormat.Mp3)
-                    .withVoiceId(voice.get())
+                    .withVoiceId(voiceId)
                     .withTextType(TextType.Ssml)
                     .withSampleRate("16000");
             final SynthesizeSpeechResult synthResult = awsPolly.synthesizeSpeech(synthRequest);
 
             try {
-                // now upload stream to S3
-                final String filePath = String.format("%1$s-%2$s-%3$s.mp3", locale, voice.get(), text
-                        .replace(" ", "_")
-                        .replaceAll("(?i)ä", "ae")
-                        .replaceAll("(?i)ü", "ue")
-                        .replaceAll("(?i)ö", "oe")
-                        .replaceAll("ß", "ss"));
-                final String mp3Url = SkillConfig.getS3BucketUrl() + filePath;
-
-                final PutObjectRequest s3Put = new PutObjectRequest(SkillConfig.getS3BucketName(), filePath, synthResult.getAudioStream(), new ObjectMetadata())
+                final PutObjectRequest s3Put = new PutObjectRequest(SkillConfig.getS3BucketName(), getMp3Path(text), synthResult.getAudioStream(), new ObjectMetadata())
                         .withCannedAcl(CannedAccessControlList.PublicRead);
                 awsS3.putObject(s3Put);
 
                 // mp3 needs conversion to comply with MP3 format supported by Alexa service
-                final String mp3ConvertedUrl = Mp3Converter.convertMp3(mp3Url);
+                final String mp3ConvertedUrl = Mp3Converter.convertMp3(getMp3Url(text));
 
                 if (mp3ConvertedUrl != null && !mp3ConvertedUrl.isEmpty()) {
-                    return Optional.of(TextToSpeech.create()
-                            .withText(text).withMp3(mp3ConvertedUrl).withVoice(synthRequest.getVoiceId())
-                            .withTranslatedText(translated).build());
+                    return Optional.of(getTTS(text, translated.get()));
                 }
             } catch (final IOException | URISyntaxException e) {
-                log.error("Error while converting mp3. " + e.getMessage());
+                log.error("Error while generating mp3. " + e.getMessage());
             }
         }
         return Optional.empty();
     }
 
-    public String getLocale() {
-        return locale;
+    private String getMp3Path(final String text) {
+        return String.format("%1$s/%2$s/%3$s.mp3", locale, voiceId, text.replace(" ", "_"));
     }
 
-    public String getLanguage() {
-        return language;
+    private String getMp3Url(final String text) {
+        return SkillConfig.getS3BucketUrl() + getMp3Path(text);
     }
 
-    public String getVoice() {
-        return this.voice.orElse("");
+    private TextToSpeech getTTS(final String text) {
+        return getTTS(text, null);
+    }
+
+    private TextToSpeech getTTS(final String text, final String translatedText) {
+        return TextToSpeech.create()
+                .withLanguage(language)
+                .withText(text)
+                .withMp3(getMp3Url(text))
+                .withVoice(voiceId)
+                .withTranslatedText(translatedText).build();
     }
 }

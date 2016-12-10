@@ -97,8 +97,8 @@ public class TextToSpeech extends AlexaStateModel {
         }
 
         public TextToSpeech build() {
+            Validate.notBlank(text, "Text must not be blank.");
             Validate.notBlank(voice, "Voice must not be blank.");
-            Validate.notBlank(translatedText, "Translated text must not be blank.");
             Validate.notBlank(mp3, "Mp3 must not be blank.");
             return new TextToSpeech(this);
         }
