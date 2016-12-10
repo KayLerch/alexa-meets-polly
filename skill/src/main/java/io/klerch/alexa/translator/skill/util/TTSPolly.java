@@ -58,7 +58,12 @@ public class TTSPolly {
 
             try {
                 // now upload stream to S3
-                final String filePath = String.format("%1$s-%2$s-%3$s.mp3", locale, voice.get(), StringEscapeUtils.escapeHtml4(text.replace(" ", "_")));
+                final String filePath = String.format("%1$s-%2$s-%3$s.mp3", locale, voice.get(), text
+                        .replace(" ", "_")
+                        .replaceAll("(?i)ä", "ae")
+                        .replaceAll("(?i)ü", "ue")
+                        .replaceAll("(?i)ö", "oe")
+                        .replaceAll("ß", "ss"));
                 final String mp3Url = SkillConfig.getS3BucketUrl() + filePath;
 
                 final PutObjectRequest s3Put = new PutObjectRequest(SkillConfig.getS3BucketName(), filePath, synthResult.getAudioStream(), new ObjectMetadata())
