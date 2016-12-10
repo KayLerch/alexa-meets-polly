@@ -30,7 +30,7 @@ public class S3Utils {
 
     public void uploadFileToS3(final File file, final String mp3Url) throws UnsupportedEncodingException {
         // extract relative path to file from absolute url
-        final String filePath = URLEncoder.encode(mp3Url.substring(bucketUrl.length()), "UTF-8");
+        final String filePath = mp3Url.substring(bucketUrl.length());
         System.out.println(filePath);
         System.out.println(file.getAbsoluteFile());
         // upload mp3 to S3 bucket
