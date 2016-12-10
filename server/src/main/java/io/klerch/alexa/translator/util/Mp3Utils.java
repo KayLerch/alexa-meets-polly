@@ -16,7 +16,7 @@ public class Mp3Utils {
     private static String AUDIO_MP3_CODEC = "libmp3lame";
 
     public static File convertUrlToMp3(final String url) throws IOException {
-        final String mp3Filename = StringEscapeUtils.escapeHtml4(url.substring(url.lastIndexOf("/") + 1));
+        final String mp3Filename = URLEncoder.encode(url.substring(url.lastIndexOf("/") + 1), "UTF-8");
         // build a configuration according to what Alexa expects from an MP3 it supports
         // see: https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/speech-synthesis-markup-language-ssml-reference#audio
         final FFmpegBuilder builder = new FFmpegBuilder()
@@ -36,7 +36,7 @@ public class Mp3Utils {
     }
 
     public static File convertUrlToMp3Cmd(final String url) throws IOException, InterruptedException {
-        final String mp3Filename = StringEscapeUtils.escapeHtml4(url.substring(url.lastIndexOf("/") + 1));
+        final String mp3Filename = URLEncoder.encode(url.substring(url.lastIndexOf("/") + 1), "UTF-8");
         final Process p = Runtime.getRuntime().exec("ffmpeg -i \"" + url + "\" -ac 2 -codec:a libmp3lame -b:a 48k -ar 16000 \"" + mp3Filename + "\"");
         p.waitFor();
 
