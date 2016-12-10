@@ -54,7 +54,7 @@ abstract class AbstractIntentHandler implements AlexaIntentHandler {
         final Optional<String> translated = new GoogleTranslation(input.getLocale()).translate(text, lang);
 
         if (translated.isPresent()) {
-            final String translatedText = StringEscapeUtils.unescapeHtml4(translated.get());
+            final String translatedText = translated.get();
             // translated term to speech
             final Optional<TextToSpeech> tts = ttsPolly.textToSpeech(text, translatedText);
 

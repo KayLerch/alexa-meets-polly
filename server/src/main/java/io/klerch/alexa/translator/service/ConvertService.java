@@ -21,11 +21,13 @@ public class ConvertService {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getMorse(@QueryParam("mp3") String mp3Url) {
+    public String convertMp3(@QueryParam("mp3") String mp3Url) {
         try {
-            final File mp3File = Mp3Utils.convertUrlToMp3(mp3Url, mp3Url.substring(mp3Url.lastIndexOf("/") + 1));
-            return s3Utils.uploadFileToS3(mp3File, mp3File.getName());
-        } catch (IOException e) {
+            final File mp3File = Mp3Utils.convertUrlToMp3(mp3Url);
+            s3Utils.uploadFileToS3(mp3File, mp3Url);
+            // return same url as input to indicate success to caller
+            return mp3Url;
+        } catch (final IOException e) {
             e.printStackTrace();
         }
         return "";

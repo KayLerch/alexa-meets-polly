@@ -7,6 +7,7 @@ import com.google.api.services.translate.model.TranslationsListResponse;
 import io.klerch.alexa.tellask.util.resource.ResourceUtteranceReader;
 import io.klerch.alexa.tellask.util.resource.YamlReader;
 import io.klerch.alexa.translator.skill.SkillConfig;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -57,7 +58,7 @@ public class GoogleTranslation {
                 final TranslationsListResponse response = list.execute();
 
                 if (!response.isEmpty() && !response.getTranslations().isEmpty()) {
-                    return Optional.of(response.getTranslations().get(0).getTranslatedText());
+                    return Optional.of(StringEscapeUtils.unescapeHtml4(response.getTranslations().get(0).getTranslatedText()));
                 }
             } catch (IOException e) {
                 log.severe(e.getMessage());

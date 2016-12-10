@@ -25,15 +25,9 @@ public class S3Utils {
         s3Client = new AmazonS3Client();
     }
 
-    public boolean isFileAlreadyExisting(final String fileKey) {
-        return s3Client.doesObjectExist(bucket, fileKey);
-    }
-
-    String getS3Url(final String fileKey) {
-        return bucketUrl + fileKey;
-    }
-
-    public String uploadFileToS3(final File file, final String filePath) {
+    public void uploadFileToS3(final File file, final String mp3Url) {
+        // extract relative path to file from absolute url
+        final String filePath = mp3Url.substring(bucketUrl.length());
         // upload mp3 to S3 bucket
         final PutObjectRequest s3Put = new PutObjectRequest(bucket, filePath, file).withCannedAcl(CannedAccessControlList.PublicRead);
         s3Client.putObject(s3Put);
@@ -41,8 +35,5 @@ public class S3Utils {
         if (!file.delete()) {
             logger.warning("Could not delete mp3 temporary audio file.");
         }
-
-        // return public url of mp3 in bucket
-        return bucketUrl + filePath;
     }
 }

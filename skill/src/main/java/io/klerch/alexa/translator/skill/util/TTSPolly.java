@@ -5,6 +5,7 @@ import com.amazonaws.services.polly.AmazonPollyClient;
 import com.amazonaws.services.polly.model.OutputFormat;
 import com.amazonaws.services.polly.model.SynthesizeSpeechRequest;
 import com.amazonaws.services.polly.model.SynthesizeSpeechResult;
+import com.amazonaws.services.polly.model.TextType;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -13,6 +14,7 @@ import io.klerch.alexa.tellask.util.resource.ResourceUtteranceReader;
 import io.klerch.alexa.tellask.util.resource.YamlReader;
 import io.klerch.alexa.translator.skill.SkillConfig;
 import io.klerch.alexa.translator.skill.model.TextToSpeech;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
@@ -45,17 +47,18 @@ public class TTSPolly {
 
     public Optional<TextToSpeech> textToSpeech(final String text, final String translated) {
         if (voice.isPresent()) {
+            final String ssml = String.format("<speak><prosody rate='x-slow' volume='x-loud'>%1$s</prosody></speak>", translated);
             final SynthesizeSpeechRequest synthRequest = new SynthesizeSpeechRequest()
-                    .withText(translated)
+                    .withText(ssml)
                     .withOutputFormat(OutputFormat.Mp3)
                     .withVoiceId(voice.get())
-                    .withTextType("text")
+                    .withTextType(TextType.Ssml)
                     .withSampleRate("16000");
             final SynthesizeSpeechResult synthResult = awsPolly.synthesizeSpeech(synthRequest);
 
             try {
                 // now upload stream to S3
-                final String filePath = locale + "-" + URLEncoder.encode(text.replace(" ", "_").replace("ü", "ue").replace("ö", "oe").replace("ä", "ae").replace("ß", "ss"), "UTF-8") + "-" + voice.get() + ".mp3";
+                final String filePath = String.format("%1$s/%2$s/%3$s.mp3", locale, voice.get(), StringEscapeUtils.escapeHtml4(text));
                 final String mp3Url = SkillConfig.getS3BucketUrl() + filePath;
 
                 final PutObjectRequest s3Put = new PutObjectRequest(SkillConfig.getS3BucketName(), filePath, synthResult.getAudioStream(), new ObjectMetadata())

@@ -17,7 +17,7 @@ SayHelp:
   Utterances:
     - "I can translate common terms of your language into a lot of foreign languages. Say something like <p>What is Good morning in German?</p>"
   Reprompts:
-    - "Say something like <p>What does Good evening mean in russian?</p>"
+    - "Say something like <p>What is Good evening in russian?</p>"
 
 SaySorry:
   - "[Excuse me|Sorry|I am sorry], an error occurred."
