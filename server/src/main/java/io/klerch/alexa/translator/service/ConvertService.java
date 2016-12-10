@@ -1,6 +1,6 @@
 package io.klerch.alexa.translator.service;
 
-import io.klerch.alexa.translator.util.Mp3Utils;
+import io.klerch.alexa.translator.util.FfmpegUtils;
 import io.klerch.alexa.translator.util.S3Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,7 +23,7 @@ public class ConvertService {
     @Produces(MediaType.APPLICATION_JSON)
     public String convertMp3(@QueryParam("mp3") String mp3Url) {
         try {
-            final File mp3File = Mp3Utils.convertUrlToMp3Cmd(mp3Url);
+            final File mp3File = FfmpegUtils.convertUrlToMp3Cmd(mp3Url);
             s3Utils.uploadFileToS3(mp3File, mp3Url);
             // return same url as input to indicate success to caller
             return mp3Url;
