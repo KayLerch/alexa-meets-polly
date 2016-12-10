@@ -32,11 +32,6 @@ public class TextToSpeech extends AlexaStateModel {
         this.mp3 = builder.mp3;
     }
 
-    public TextToSpeech withLanguage(final String language) {
-        this.language = language;
-        return this;
-    }
-
     public String getTranslatedText() {
         return translatedText;
     }
