@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.logging.Logger;
 
 @Component("s3Utils")
@@ -25,9 +27,9 @@ public class S3Utils {
         s3Client = new AmazonS3Client();
     }
 
-    public void uploadFileToS3(final File file, final String mp3Url) {
+    public void uploadFileToS3(final File file, final String mp3Url) throws UnsupportedEncodingException {
         // extract relative path to file from absolute url
-        final String filePath = mp3Url.substring(bucketUrl.length());
+        final String filePath = URLDecoder.decode(mp3Url.substring(bucketUrl.length()), "UTF-8");
         // upload mp3 to S3 bucket
         final PutObjectRequest s3Put = new PutObjectRequest(bucket, filePath, file).withCannedAcl(CannedAccessControlList.PublicRead);
         s3Client.putObject(s3Put);
