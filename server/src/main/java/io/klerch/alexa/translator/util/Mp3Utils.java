@@ -25,7 +25,6 @@ public class Mp3Utils {
                 .overrideOutputFiles(true)
                 .addOutput(mp3Filename)
                 .setAudioCodec(AUDIO_MP3_CODEC)
-                .setAudioQuality(100)
                 .setAudioChannels(FFmpeg.AUDIO_MONO)
                 .setAudioBitRate(FFmpeg.AUDIO_SAMPLE_48000)
                 .setAudioSampleRate(FFmpeg.AUDIO_SAMPLE_16000)
