@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URLEncoder;
 import java.util.UUID;
 
 public class FfmpegUtils {
@@ -18,7 +19,7 @@ public class FfmpegUtils {
         // build a configuration according to what Alexa expects from an MP3 it supports
         // see: https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/speech-synthesis-markup-language-ssml-reference#audio
         final FFmpegBuilder builder = new FFmpegBuilder()
-                .setInput(url)
+                .setInput(URLEncoder.encode(url, "UTF-8"))
                 .overrideOutputFiles(true)
                 .addOutput(mp3Filename)
                 .setAudioCodec(AUDIO_MP3_CODEC)
