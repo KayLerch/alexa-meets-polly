@@ -23,7 +23,7 @@ public class TranslateHandler extends AbstractIntentHandler {
         }
 
         final String lang = input.getSlotValue("language");
-        final String text = sb.toString();
+        final String text = sb.toString().trim();
 
         return sayTranslate(input, text, lang);
     }

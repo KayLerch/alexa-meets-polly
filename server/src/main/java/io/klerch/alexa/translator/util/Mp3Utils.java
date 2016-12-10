@@ -10,16 +10,17 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URLEncoder;
 
 public class Mp3Utils {
     private static String AUDIO_MP3_CODEC = "libmp3lame";
 
     public static File convertUrlToMp3(final String url) throws IOException {
-        final String mp3Filename = StringEscapeUtils.escapeHtml4(url);
+        final String mp3Filename = URLEncoder.encode(url, "UTF-8");
         // build a configuration according to what Alexa expects from an MP3 it supports
         // see: https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/speech-synthesis-markup-language-ssml-reference#audio
         final FFmpegBuilder builder = new FFmpegBuilder()
-                .setInput(url)
+                .setInput("\"" + url + "\"")
                 .overrideOutputFiles(true)
                 .addOutput(mp3Filename)
                 .setAudioCodec(AUDIO_MP3_CODEC)
