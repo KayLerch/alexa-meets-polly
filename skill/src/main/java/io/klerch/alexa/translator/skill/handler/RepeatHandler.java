@@ -7,6 +7,7 @@ import io.klerch.alexa.tellask.model.AlexaOutput;
 import io.klerch.alexa.tellask.schema.annotation.AlexaIntentListener;
 import io.klerch.alexa.tellask.schema.type.AlexaIntentType;
 import io.klerch.alexa.tellask.util.AlexaRequestHandlerException;
+import io.klerch.alexa.translator.skill.model.LastTextToSpeech;
 import io.klerch.alexa.translator.skill.model.TextToSpeech;
 
 import java.util.Optional;
@@ -17,12 +18,15 @@ public class RepeatHandler extends AbstractIntentHandler {
     public AlexaOutput handleRequest(final AlexaInput input) throws AlexaRequestHandlerException, AlexaStateException {
         final AWSDynamoStateHandler dynamoHandler = new AWSDynamoStateHandler(input.getSessionStateHandler().getSession());
         // try get last result
-        final Optional<TextToSpeech> tts = dynamoHandler.readModel(TextToSpeech.class);
+        final Optional<LastTextToSpeech> lastTts = dynamoHandler.readModel(LastTextToSpeech.class);
 
-        if (tts.isPresent()) {
-            // avoid to rewrite model to dynamo
-            tts.get().setHandler(input.getSessionStateHandler());
-            return sayTranslate(tts.get());
+        if (lastTts.isPresent()) {
+            final Optional<TextToSpeech> tts = dynamoHandler.readModel(TextToSpeech.class, lastTts.get().getTtsId());
+            if (tts.isPresent()) {
+                // avoid to rewrite model to dynamo
+                tts.get().setHandler(input.getSessionStateHandler());
+                return sayTranslate(input, tts.get());
+            }
         }
         return AlexaOutput.tell("SayNothingToRepeat").build();
     }

@@ -7,7 +7,7 @@ import io.klerch.alexa.tellask.schema.annotation.AlexaSlotSave;
 import io.klerch.alexa.tellask.schema.type.AlexaOutputFormat;
 import org.apache.commons.lang3.Validate;
 
-@AlexaStateSave(Scope = AlexaScope.USER)
+@AlexaStateSave(Scope = AlexaScope.APPLICATION)
 public class TextToSpeech extends AlexaStateModel {
     @AlexaSlotSave(slotName = "translatedText")
     private String translatedText;

@@ -1,4 +1,4 @@
-package io.klerch.alexa.translator.skill.util;
+package io.klerch.alexa.translator.skill.tts;
 
 import io.klerch.alexa.translator.skill.SkillConfig;
 import org.apache.commons.io.IOUtils;

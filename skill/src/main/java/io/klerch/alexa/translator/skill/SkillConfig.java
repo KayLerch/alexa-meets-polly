@@ -1,5 +1,7 @@
 package io.klerch.alexa.translator.skill;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -66,5 +68,13 @@ public class SkillConfig {
 
     public static String getTranslatorConvertServicePass() {
         return properties.getProperty("TranslatorConvertServicePass");
+    }
+
+    public static String getS3CardFolderUrl() {
+        return getS3BucketUrl() + properties.getProperty("S3CardFolder");
+    }
+
+    public static Boolean shouldSkipMp3Conversion() {
+        return StringUtils.equalsIgnoreCase("true", properties.getProperty("SkipMp3Conversion"));
     }
 }

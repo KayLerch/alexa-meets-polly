@@ -1,11 +1,9 @@
-package io.klerch.alexa.translator.skill.util;
+package io.klerch.alexa.translator.skill.translate;
 
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.translate.Translate;
 import com.google.api.services.translate.model.TranslationsListResponse;
-import io.klerch.alexa.tellask.util.resource.ResourceUtteranceReader;
-import io.klerch.alexa.tellask.util.resource.YamlReader;
 import io.klerch.alexa.translator.skill.SkillConfig;
 import org.apache.commons.lang3.StringEscapeUtils;
 
@@ -16,18 +14,12 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class GoogleTranslation {
-    private static Logger log = Logger.getLogger(GoogleTranslation.class.getName());
+public class GoogleTranslator extends AbstractTranslator {
+    private static Logger log = Logger.getLogger(GoogleTranslator.class.getName());
     private Translate translator;
-    private final String locale;
-    private String languageCode;
-    private final YamlReader yamlReader;
 
-    public GoogleTranslation(final String locale) {
-        this.locale = locale;
-        final ResourceUtteranceReader reader = new ResourceUtteranceReader("/out", "/languages.yml");
-        this.yamlReader = new YamlReader(reader, locale);
-
+    public GoogleTranslator(final String locale) {
+        super(locale);
         try {
             this.translator = new Translate.Builder(
                     GoogleNetHttpTransport.newTrustedTransport(),
@@ -39,20 +31,19 @@ public class GoogleTranslation {
         }
     }
 
+    @Override
     public Optional<String> translate(final String term, final String language) {
         final Optional<String> code = language != null ? this.yamlReader.getRandomUtterance(language.toLowerCase().replace(" ", "_")) : Optional.empty();
-        final String sourceCode = locale.split("-")[0];
+        final String sourceCode = this.locale.split("-")[0];
 
         if (code.isPresent()) {
             // if source and target language are the same return original term
             if (code.get().equalsIgnoreCase(sourceCode)) {
                 return Optional.of(term);
             }
-
-            this.languageCode = code.get();
             try {
                 final Translate.Translations.List list = translator.new Translations().list(
-                        Collections.singletonList(term), this.languageCode);
+                        Collections.singletonList(term), code.get());
                 list.setKey(SkillConfig.getGoogleApiKey());
                 list.setSource(sourceCode);
                 final TranslationsListResponse response = list.execute();
@@ -65,9 +56,5 @@ public class GoogleTranslation {
             }
         }
         return Optional.empty();
-    }
-
-    public String getLanguageCode() {
-        return languageCode;
     }
 }

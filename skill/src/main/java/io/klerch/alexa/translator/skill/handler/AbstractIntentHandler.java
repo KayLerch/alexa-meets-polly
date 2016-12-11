@@ -1,14 +1,18 @@
 package io.klerch.alexa.translator.skill.handler;
 
-import com.amazon.speech.ui.Card;
-import com.amazon.speech.ui.SimpleCard;
+import com.amazon.speech.ui.Image;
+import com.amazon.speech.ui.StandardCard;
+import io.klerch.alexa.state.handler.AWSDynamoStateHandler;
 import io.klerch.alexa.state.utils.AlexaStateException;
 import io.klerch.alexa.tellask.model.AlexaInput;
 import io.klerch.alexa.tellask.model.AlexaOutput;
 import io.klerch.alexa.tellask.schema.AlexaIntentHandler;
 import io.klerch.alexa.tellask.util.AlexaRequestHandlerException;
+import io.klerch.alexa.translator.skill.SkillConfig;
+import io.klerch.alexa.translator.skill.model.LastTextToSpeech;
 import io.klerch.alexa.translator.skill.model.TextToSpeech;
-import io.klerch.alexa.translator.skill.util.TTSPolly;
+import io.klerch.alexa.translator.skill.tts.TTSPolly;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 abstract class AbstractIntentHandler implements AlexaIntentHandler {
@@ -31,23 +35,35 @@ abstract class AbstractIntentHandler implements AlexaIntentHandler {
         return AlexaOutput.tell("SaySorry").build();
     }
 
-    AlexaOutput sayTranslate(final TextToSpeech tts) {
-        final Card card = new SimpleCard();
-        card.setTitle(tts.getText() + " -> " + tts.getTranslatedText());
+    AlexaOutput sayTranslate(final AlexaInput input, final TextToSpeech tts) {
+        final StandardCard card = new StandardCard();
+        card.setTitle(StringUtils.capitalize(tts.getText()) + " -> " + tts.getTranslatedText());
+        card.setText("translated by Google");
+
+        final String imgUrl = String.format("%1$s/%2$s-%3$s.png", SkillConfig.getS3CardFolderUrl(), input.getLocale(), tts.getVoice().toLowerCase());
+
+        final Image img = new Image();
+        img.setLargeImageUrl(imgUrl);
+        img.setSmallImageUrl(imgUrl);
+        card.setImage(img);
+
+        // remember the current tts as last tts of user
+        final AWSDynamoStateHandler dynamoStateHandler = new AWSDynamoStateHandler(input.getSessionStateHandler().getSession());
+        final LastTextToSpeech lastTts = new LastTextToSpeech(tts);
 
         return AlexaOutput.tell("SayTranslate")
                 .withCard(card)
-                .putState(tts)
+                .putState(tts, lastTts.withHandler(dynamoStateHandler))
                 .build();
     }
 
-    AlexaOutput sayTranslate(final AlexaInput input, final String text, final String lang) {
-        final TTSPolly ttsPolly = new TTSPolly(input.getLocale(), lang);
+    AlexaOutput sayTranslate(final AlexaInput input, final String text) throws AlexaStateException {
+        final TTSPolly ttsPolly = new TTSPolly(input);
 
-        return ttsPolly.textToSpeech(text).map(this::sayTranslate).orElse(
+        return ttsPolly.textToSpeech(text).map(tts -> sayTranslate(input, tts)).orElse(
             AlexaOutput.tell("SayNoTranslation")
                     .putSlot("text", text)
-                    .putSlot("language", lang)
+                    .putSlot("language", ttsPolly.getLanguage())
                     .build());
     }
 }
