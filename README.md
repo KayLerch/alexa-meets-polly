@@ -4,7 +4,7 @@ __Work in progress!!!__
 This project demonstrates an integration of AWS Polly into an Alexa skill which translates words into different languages.
 Polly is Amazon's new text-to-speech cloud service and is a perfect fit for Alexa skills aiming for playing back foreign voice.
 
-This project combines the Alexa Skills Kit, AWS Polly and Google Translate API to translate common phrases into
+This project combines the Alexa Skills Kit, AWS Polly and a Translator API to translate common phrases into
 17 foreign languages. The code will improve and is experimental in the current state.
 
 ![](docs/solution-architecture.png)
@@ -16,7 +16,7 @@ value _Polish_ and a term-slot having the value _Hello_. A Lambda function whose
 Repo catches the Speechlet.
 
 3. Firstly, the skill implementation lets the term _Hello_ translate to polish by leveraging
-Google Translate API.
+Microsoft Translator API (or interchangeably with Google Translate).
 
 4. The resulting translation is then passed to AWS Polly giving it the desired VoiceId. Polly returns
 an MP3 stream with the spoken translated term.
