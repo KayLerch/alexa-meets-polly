@@ -2,7 +2,7 @@ SayWelcome:
   - "Hallo. Was möchtest du mich übersetzen lassen?"
 
 SayTranslate:
-  - "{text} [auf|in] {language} [lautet|bedeutet|heißt|klingt so|hört sich so an] {mp3}"
+  - "{text} [auf|in] {language} [lautet|bedeutet|heißt|klingt so] {mp3}"
 
 SayNoTranslation:
   - "Entschuldige, aber {text} konnte ich nicht nach {language} übersetzen."
@@ -15,9 +15,9 @@ SayNothingToRepeat:
 
 SayHelp:
   Utterances:
-    - "Ich kann dir viele Wörter deiner Sprache in fremde Sprachen übersetzen. Sage dazu beispielsweise <p>Was heißt Guten Tag auf Russisch?</p>"
+    - "Ich kann dir viele Wörter aus dem Deutschen in fremde Sprachen übersetzen. Sage dazu beispielsweise <p>Was ist Guten Tag auf Russisch?</p>"
   Reprompts:
-    - "Sage zum Beispiel <p>Was heißt Auto auf Englisch?</p>"
+    - "Sage zum Beispiel <p>Was ist Steuererklärung auf Englisch?</p>"
 
 SaySorry:
   - "[Entschuldige|Sorry|Tut mir leid], etwas ist hier schief [gegangen|gelaufen]."

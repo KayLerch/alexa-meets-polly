@@ -21,7 +21,7 @@ public class TextToSpeech extends AlexaStateModel {
     private String text;
 
     public TextToSpeech() {
-
+        // keep this empty constructor. it is important for the magic reflection of the state handlers
     }
 
     private TextToSpeech(final TextToSpeechBuilder builder) {
@@ -32,22 +32,37 @@ public class TextToSpeech extends AlexaStateModel {
         this.mp3 = builder.mp3;
     }
 
+    /**
+     * @return the translated text
+     */
     public String getTranslatedText() {
         return translatedText;
     }
 
+    /**
+     * @return the original text before it was translated
+     */
     public String getText() {
         return text;
     }
 
+    /**
+     * @return the language coming from the user input (e.g. 'russian' or 'russisch')
+     */
     public String getLanguage() {
         return language;
     }
 
+    /**
+     * @return Url to an MP3 file having the output speech of the translated text
+     */
     public String getMp3() {
         return mp3;
     }
 
+    /**
+     * @return id of the Polly voice used to convert translated text to speech
+     */
     public String getVoice() {
         return voice;
     }

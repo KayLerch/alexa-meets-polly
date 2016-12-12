@@ -8,7 +8,9 @@ import io.klerch.alexa.state.model.AlexaStateSave;
 public class LastTextToSpeech extends AlexaStateModel {
     private String ttsId;
 
-    public LastTextToSpeech() {}
+    public LastTextToSpeech() {
+        // keep this empty constructor. it is important for the magic reflection of the state handlers
+    }
 
     public LastTextToSpeech(final TextToSpeech tts) {
         ttsId = tts.getId();

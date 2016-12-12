@@ -58,6 +58,10 @@ public class SkillConfig {
         return properties.getProperty("GoogleApiKey");
     }
 
+    public static String getMicrosoftSubscriptionKey() {
+        return properties.getProperty("MicrosoftSubscriptionKey");
+    }
+
     public static String getTranslatorConvertServiceUrl() {
         return properties.getProperty("TranslatorConvertServiceUrl");
     }
@@ -76,5 +80,9 @@ public class SkillConfig {
 
     public static Boolean shouldSkipMp3Conversion() {
         return StringUtils.equalsIgnoreCase("true", properties.getProperty("SkipMp3Conversion"));
+    }
+
+    public static String getTranslatorService() {
+        return properties.getProperty("TranslatorService");
     }
 }

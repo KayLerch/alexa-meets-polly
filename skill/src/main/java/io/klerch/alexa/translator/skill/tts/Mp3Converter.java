@@ -20,23 +20,18 @@ public class Mp3Converter {
         // get credentials for webservice from application config
         final String apiKey = SkillConfig.getTranslatorConvertServiceUser();
         final String apiPass = SkillConfig.getTranslatorConvertServicePass();
-
         // build uri
         final URIBuilder uri = new URIBuilder(SkillConfig.getTranslatorConvertServiceUrl()).addParameter("mp3", mp3Url);
-
         // set up web request
         final HttpGet httpGet = new HttpGet(uri.build());
         httpGet.setHeader("Content-Type", "text/plain");
-
         // set up credentials
         final CredentialsProvider provider = new BasicCredentialsProvider();
         final UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(apiKey, apiPass);
         provider.setCredentials(AuthScope.ANY, credentials);
-
         // send request to convert webservice
         final HttpResponse response =
                 HttpClientBuilder.create().setDefaultCredentialsProvider(provider).build().execute(httpGet);
-
         // work on response
         final HttpEntity entity = response.getEntity();
         return IOUtils.toString(entity.getContent(), "UTF-8");

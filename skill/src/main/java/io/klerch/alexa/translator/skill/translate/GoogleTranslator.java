@@ -19,7 +19,8 @@ public class GoogleTranslator extends AbstractTranslator {
     private Translate translator;
 
     public GoogleTranslator(final String locale) {
-        super(locale);
+        super(locale, "/languages-google.yml");
+
         try {
             this.translator = new Translate.Builder(
                     GoogleNetHttpTransport.newTrustedTransport(),

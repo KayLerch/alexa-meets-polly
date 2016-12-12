@@ -11,7 +11,7 @@ import io.klerch.alexa.tellask.util.AlexaRequestHandlerException;
 import io.klerch.alexa.translator.skill.SkillConfig;
 import io.klerch.alexa.translator.skill.model.LastTextToSpeech;
 import io.klerch.alexa.translator.skill.model.TextToSpeech;
-import io.klerch.alexa.translator.skill.tts.TTSPolly;
+import io.klerch.alexa.translator.skill.tts.TextToSpeechConverter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -37,7 +37,7 @@ abstract class AbstractIntentHandler implements AlexaIntentHandler {
 
     AlexaOutput sayTranslate(final AlexaInput input, final TextToSpeech tts) {
         final StandardCard card = new StandardCard();
-        card.setTitle(StringUtils.capitalize(tts.getText()) + " -> " + tts.getTranslatedText());
+        card.setTitle(StringUtils.capitalize(tts.getText()) + " : " + tts.getTranslatedText());
         card.setText("translated by Google");
 
         final String imgUrl = String.format("%1$s/%2$s-%3$s.png", SkillConfig.getS3CardFolderUrl(), input.getLocale(), tts.getVoice().toLowerCase());
@@ -58,12 +58,12 @@ abstract class AbstractIntentHandler implements AlexaIntentHandler {
     }
 
     AlexaOutput sayTranslate(final AlexaInput input, final String text) throws AlexaStateException {
-        final TTSPolly ttsPolly = new TTSPolly(input);
+        final TextToSpeechConverter ttsConverter = new TextToSpeechConverter(input);
 
-        return ttsPolly.textToSpeech(text).map(tts -> sayTranslate(input, tts)).orElse(
+        return ttsConverter.textToSpeech(text).map(tts -> sayTranslate(input, tts)).orElse(
             AlexaOutput.tell("SayNoTranslation")
                     .putSlot("text", text)
-                    .putSlot("language", ttsPolly.getLanguage())
+                    .putSlot("language", ttsConverter.getLanguage())
                     .build());
     }
 }
