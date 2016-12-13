@@ -33,18 +33,18 @@ public class GoogleTranslator extends AbstractTranslator {
     }
 
     @Override
-    public Optional<String> translate(final String term, final String language) {
+    public Optional<String> translate(final String text, final String language) {
         final Optional<String> code = language != null ? this.yamlReader.getRandomUtterance(language.toLowerCase().replace(" ", "_")) : Optional.empty();
         final String sourceCode = this.locale.split("-")[0];
 
         if (code.isPresent()) {
             // if source and target language are the same return original term
             if (code.get().equalsIgnoreCase(sourceCode)) {
-                return Optional.of(term);
+                return Optional.of(text);
             }
             try {
                 final Translate.Translations.List list = translator.new Translations().list(
-                        Collections.singletonList(term), code.get());
+                        Collections.singletonList(text), code.get());
                 list.setKey(SkillConfig.getGoogleApiKey());
                 list.setSource(sourceCode);
                 final TranslationsListResponse response = list.execute();

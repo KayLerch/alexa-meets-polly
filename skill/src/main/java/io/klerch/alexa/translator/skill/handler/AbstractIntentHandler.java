@@ -38,7 +38,7 @@ abstract class AbstractIntentHandler implements AlexaIntentHandler {
     AlexaOutput sayTranslate(final AlexaInput input, final TextToSpeech tts) {
         final StandardCard card = new StandardCard();
         card.setTitle(StringUtils.capitalize(tts.getText()) + " : " + tts.getTranslatedText());
-        card.setText("translated by Google");
+        card.setText("http://aka.ms/MicrosoftTranslatorAttribution");
 
         final String imgUrl = String.format("%1$s/%2$s-%3$s.png", SkillConfig.getS3CardFolderUrl(), input.getLocale(), tts.getVoice().toLowerCase());
 

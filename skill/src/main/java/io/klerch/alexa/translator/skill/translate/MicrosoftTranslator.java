@@ -23,7 +23,7 @@ public class MicrosoftTranslator extends AbstractTranslator {
     }
 
     @Override
-    public Optional<String> translate(final String term, final String language) {
+    public Optional<String> translate(final String text, final String language) {
         final Optional<String> code = language != null ? this.yamlReader.getRandomUtterance(language.toLowerCase().replace(" ", "_")) : Optional.empty();
         final String sourceCode = this.locale.split("-")[0];
 
@@ -31,7 +31,7 @@ public class MicrosoftTranslator extends AbstractTranslator {
             try {
                 // if source and target language are the same return original term
                 if (code.get().equalsIgnoreCase(sourceCode)) {
-                    return Optional.of(term);
+                    return Optional.of(text);
                 }
                 final String accessToken = String.format("Bearer %1$s", getAccessToken());
                 final URIBuilder uri = new URIBuilder(ServiceEndpointTranslate)
@@ -39,7 +39,7 @@ public class MicrosoftTranslator extends AbstractTranslator {
                         .addParameter("from", sourceCode)
                         .addParameter("to", code.get())
                         .addParameter("contentType", "text/plain")
-                        .addParameter("text", URLEncoder.encode(term, "UTF-8"));
+                        .addParameter("text", URLEncoder.encode(text, "UTF-8"));
                 final HttpGet httpGet = new HttpGet(uri.build());
                 final HttpResponse response = HttpClientBuilder.create().build().execute(httpGet);
                 // work on response

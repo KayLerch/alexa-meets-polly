@@ -6,11 +6,11 @@ import io.klerch.alexa.tellask.util.resource.YamlReader;
 import java.util.Optional;
 
 public abstract class AbstractTranslator implements ITranslator {
-    YamlReader yamlReader;
-    String locale;
+    final YamlReader yamlReader;
+    final String locale;
 
     public AbstractTranslator(final String locale) {
-        throw new RuntimeException("Translator implemention must override and implement the default constructor.");
+        throw new RuntimeException("Translator must override and implement the default constructor.");
     }
 
     AbstractTranslator(final String locale, final String yamlFile) {
@@ -23,5 +23,5 @@ public abstract class AbstractTranslator implements ITranslator {
     }
 
     @Override
-    public abstract Optional<String> translate(String term, String language);
+    public abstract Optional<String> translate(final String term, final String language);
 }

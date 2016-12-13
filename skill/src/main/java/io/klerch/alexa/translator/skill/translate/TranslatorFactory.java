@@ -4,6 +4,11 @@ import io.klerch.alexa.translator.skill.SkillConfig;
 import org.apache.commons.lang3.Validate;
 
 public class TranslatorFactory {
+    /**
+     * Gets the appropriate translator set up in the app configuration
+     * @param locale the locale coming in with a speechlet request
+     * @return appropriate translator set up in the app configuration
+     */
     public static ITranslator getTranslator(final String locale) {
         final String translatorId = SkillConfig.getTranslatorService();
         final ITranslator translator =

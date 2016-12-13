@@ -6,6 +6,7 @@ import io.klerch.alexa.state.model.AlexaStateSave;
 
 @AlexaStateSave(Scope= AlexaScope.USER)
 public class LastTextToSpeech extends AlexaStateModel {
+    // refers to TextToSpeech object in the dictionary
     private String ttsId;
 
     public LastTextToSpeech() {
