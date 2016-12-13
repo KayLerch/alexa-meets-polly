@@ -67,7 +67,13 @@ public class TextToSpeechConverter {
      * @return id of translation in dictionary
      */
     private String getDictionaryId(final String text) {
-        return String.format("%1$s-%2$s_%3$s", locale, voiceId, text.replace(" ", "_"));
+        final String escapedText = text.replace(" ", "_")
+                .replaceAll("(?i)ö", "oe")
+                .replaceAll("(?i)ä", "ae")
+                .replaceAll("(?i)ü", "ue")
+                .replaceAll("(?i)ß", "ss")
+                .replaceAll("[^a-zA-Z0-9_\\-]", "");
+        return String.format("%1$s-%2$s_%3$s", locale, voiceId, escapedText);
     }
 
     /**

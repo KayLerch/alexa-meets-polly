@@ -2,6 +2,7 @@ package io.klerch.alexa.translator.skill.translate;
 
 import io.klerch.alexa.translator.skill.SkillConfig;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -36,10 +37,10 @@ public class MicrosoftTranslator extends AbstractTranslator {
                 final String accessToken = String.format("Bearer %1$s", getAccessToken());
                 final URIBuilder uri = new URIBuilder(ServiceEndpointTranslate)
                         .addParameter("appid", accessToken)
-                        .addParameter("from", sourceCode)
-                        .addParameter("to", code.get())
+                        .addParameter("from", StringEscapeUtils.escapeHtml4(sourceCode))
+                        .addParameter("to", StringEscapeUtils.escapeHtml4(code.get()))
                         .addParameter("contentType", "text/plain")
-                        .addParameter("text", URLEncoder.encode(text, "UTF-8"));
+                        .addParameter("text", StringEscapeUtils.escapeHtml4(text));
                 final HttpGet httpGet = new HttpGet(uri.build());
                 final HttpResponse response = HttpClientBuilder.create().build().execute(httpGet);
                 // work on response
