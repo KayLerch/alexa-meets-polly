@@ -9,20 +9,26 @@ This project combines the Alexa Skills Kit, AWS Polly and a Translator API to tr
 
 ![](docs/solution-architecture.png)
 
-1. User speaks to an Alexa device and asks for e.g. _"What does Hello mean in Polish?"_
+1. User speaks to an Alexa device and asks for e.g. _"What does "Good Morning" mean in Polish?"_
 
 2. The Alexa services maps the utterance to the Translate-intent and passes in a language-slot with
-value _Polish_ and a term-slot having the value _Hello_. A Lambda function whose code is contained in this
+value _Polish_ and a term-slot having the value _Good Morning_. A Lambda function whose code is contained in this
 Repo catches the Speechlet.
 
-3. Firstly, the skill implementation lets the term _Hello_ translate to polish by leveraging
+3. Before going in the process of translating the text this skill first looks into its dictionary where all the
+previous translations are stored. If it
+
+3. Firstly, the skill implementation lets the term _Good Morning_ translate to Polish by leveraging
 Microsoft Translator API (or interchangeably with Google Translate).
 
 4. The resulting translation is then passed to AWS Polly giving it the desired VoiceId. Polly returns
 an MP3 stream with the spoken translated term.
 
 5. The translation and all information related to it is stored in a user-specific record in DynamoDB. This is how
-Alexa keeps in mind what was translated recently so that she can repeat the play back on a RepeatIntent.
+Alexa keeps in mind what was translated previously so translations and the whole roundtrip associated with it is only
+made once. A second _Good Morning_ in Polish would skip step 3) to 9) as all the information necessary to return the
+translation is obtained from the corresponding record in DynamoDB. Same applies for the RepeatIntent which will repeat
+the last translation made by the user. This is also saved in DynamoDB per user.
 
 6. The MP3 is stored in an S3 bucket but unfortunately it is not ready yet for playback in Alexa.
 
