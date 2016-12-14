@@ -85,4 +85,8 @@ public class SkillConfig {
     public static String getTranslatorService() {
         return properties.getProperty("TranslatorService");
     }
+
+    public static String getAlwaysRoundTripPhrase() {
+        return properties.getProperty("AlwaysRoundTripPhrase");
+    }
 }

@@ -19,6 +19,7 @@ import io.klerch.alexa.tellask.util.resource.YamlReader;
 import io.klerch.alexa.translator.skill.SkillConfig;
 import io.klerch.alexa.translator.skill.model.TextToSpeech;
 import io.klerch.alexa.translator.skill.translate.TranslatorFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.log4j.Logger;
 
@@ -106,8 +107,8 @@ public class TextToSpeechConverter {
     public Optional<TextToSpeech> textToSpeech(final String text) throws AlexaStateException {
         // look up previous translation in dictionary
         Optional<TextToSpeech> tts = dynamoStateHandler.readModel(TextToSpeech.class, getDictionaryId(text));
-        // if there was a previous tts for this text return immediately
-        if (tts.isPresent()) {
+        // if there was a previous tts for this text return immediately (exception for the roundtrip-phrase used by the test-client)
+        if (tts.isPresent() && !StringUtils.equalsIgnoreCase(text, SkillConfig.getAlwaysRoundTripPhrase())) {
             // set handler to session to avoid writing back to dynamo (nothing changed)
             tts.get().setHandler(sessionStateHandler);
             return tts;
