@@ -52,7 +52,7 @@ public class TranslatorClientRequestHandler implements RequestHandler<Map<String
             log.error(e.getMessage());
         }
         Validate.notNull(response, "Skill was not invoked. See log details with error message.");
-        Validate.matchesPattern(response, "(?i:.*de-DE/Salli/" + testPhrase+".mp3.*)", "Unexpected response. " + response);
+        Validate.matchesPattern(response, "(?i:.*de-DE/Salli/" + testPhrase +".mp3.*)", "Unexpected response. " + response);
         return "1";
     }
 

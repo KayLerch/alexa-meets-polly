@@ -1,5 +1,8 @@
 SayWelcome:
-  - "Hi. What do you want me to translate?"
+  Utterances:
+    - "Hi. What do you want me to translate?"
+  Reprompts:
+    - "Say something like <p>Good evening in russian</p>"
 
 SayTranslate:
   - "{text} in {language} [is|translates to] {mp3}"
@@ -15,9 +18,9 @@ SayNothingToRepeat:
 
 SayHelp:
   Utterances:
-    - "I can translate common terms of your language into a lot of foreign languages. Say something like <p>What is Good morning in German?</p>"
+    - "I can translate common terms of your language into a lot of foreign languages. Say something like <p>How are you in German?</p>"
   Reprompts:
-    - "Say something like <p>What is Good evening in russian?</p>"
+    - "Say something like <p>Good evening in russian?</p>"
 
 SaySorry:
   - "[Excuse me|Sorry|I am sorry], an error occurred."
