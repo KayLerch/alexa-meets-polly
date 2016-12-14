@@ -118,7 +118,7 @@ public class TextToSpeechConverter {
 
         if (translated.isPresent()) {
             // form the SSML by embedding the translated text
-            final String ssml = String.format("<speak><prosody rate='x-slow' volume='x-loud'>%1$s</prosody></speak>", translated.get());
+            final String ssml = String.format("<speak><prosody rate='-40%%' volume='x-loud'>%1$s</prosody></speak>", translated.get());
             // build a Polly request to get speech with desired voice and SSML
             final SynthesizeSpeechRequest synthRequest = new SynthesizeSpeechRequest()
                     .withText(ssml)

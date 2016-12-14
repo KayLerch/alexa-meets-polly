@@ -23,11 +23,11 @@ public class ConvertService {
     @Produces(MediaType.APPLICATION_JSON)
     public String convertMp3(@QueryParam("mp3") String mp3Url) {
         try {
-            final File mp3File = FFmpegUtils.convertUrlToMp3(mp3Url);
+            final File mp3File = FFmpegUtils.convertUrlToMp3Cmd(mp3Url);
             s3Utils.uploadFileToS3(mp3File, mp3Url);
             // return same url as input to indicate success to caller
             return mp3Url;
-        } catch (final IOException e) {
+        } catch (final IOException | InterruptedException e) {
             e.printStackTrace();
         }
         return "";
