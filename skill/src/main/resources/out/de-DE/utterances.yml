@@ -2,7 +2,7 @@ SayWelcome:
   Utterances:
     - "Hallo. Was möchtest du mich übersetzen lassen?"
   Reprompts:
-    - "Sage zum Beispiel <p><p>Wie geht es dir auf Englisch?</p>"
+    - "Sage zum Beispiel <p>Wie geht es dir auf Englisch?</p>"
 
 SayTranslate:
   - "{text} [auf|in] {language} [lautet|bedeutet|heißt|klingt so] {mp3}"
