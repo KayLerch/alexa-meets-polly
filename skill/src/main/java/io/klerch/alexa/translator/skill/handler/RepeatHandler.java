@@ -28,6 +28,8 @@ public class RepeatHandler extends AbstractIntentHandler {
                 return sayTranslate(input, tts.get());
             }
         }
-        return AlexaOutput.tell("SayNothingToRepeat").build();
+        return isConversation(input) ?
+                AlexaOutput.ask("SayNothingToRepeatAndElse").withReprompt(true).build() :
+                AlexaOutput.tell("SayNothingToRepeat").build();
     }
 }

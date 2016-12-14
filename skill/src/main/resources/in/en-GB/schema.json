@@ -13,6 +13,12 @@
       "intent": "AMAZON.RepeatIntent"
     },
     {
+      "intent": "AMAZON.YesIntent"
+    },
+    {
+      "intent": "AMAZON.NoIntent"
+    },
+    {
       "intent": "Translate",
       "slots": [
         {

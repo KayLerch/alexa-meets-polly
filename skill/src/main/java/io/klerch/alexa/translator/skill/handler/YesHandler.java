@@ -7,10 +7,12 @@ import io.klerch.alexa.tellask.schema.annotation.AlexaIntentListener;
 import io.klerch.alexa.tellask.schema.type.AlexaIntentType;
 import io.klerch.alexa.tellask.util.AlexaRequestHandlerException;
 
-@AlexaIntentListener(builtInIntents = {AlexaIntentType.INTENT_CANCEL, AlexaIntentType.INTENT_STOP})
-public class StopCancelHandler extends AbstractIntentHandler {
+@AlexaIntentListener(builtInIntents = AlexaIntentType.INTENT_YES)
+public class YesHandler extends AbstractIntentHandler {
     @Override
     public AlexaOutput handleRequest(final AlexaInput input) throws AlexaRequestHandlerException, AlexaStateException {
-        return AlexaOutput.tell("SayOk").build();
+        return AlexaOutput.ask("SayTranslateRequest")
+                .withReprompt(true)
+                .build();
     }
 }

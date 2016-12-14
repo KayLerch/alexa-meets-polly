@@ -10,10 +10,13 @@ import io.klerch.alexa.tellask.schema.AlexaIntentHandler;
 import io.klerch.alexa.tellask.util.AlexaRequestHandlerException;
 import io.klerch.alexa.translator.skill.SkillConfig;
 import io.klerch.alexa.translator.skill.model.LastTextToSpeech;
+import io.klerch.alexa.translator.skill.model.SessionState;
 import io.klerch.alexa.translator.skill.model.TextToSpeech;
 import io.klerch.alexa.translator.skill.tts.TextToSpeechConverter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+
+import java.util.Optional;
 
 abstract class AbstractIntentHandler implements AlexaIntentHandler {
     private static final Logger log = Logger.getLogger(AbstractIntentHandler.class);
@@ -32,7 +35,10 @@ abstract class AbstractIntentHandler implements AlexaIntentHandler {
         if (exception.getCause() != null) {
             log.error("ERROR: " + exception.getCause().getMessage());
         }
-        return AlexaOutput.tell("SaySorry").build();
+
+        return isConversation(exception.getInput()) ?
+                AlexaOutput.ask("SaySorry").withReprompt(true).build() :
+                AlexaOutput.tell("SaySorry").build();
     }
 
     AlexaOutput sayTranslate(final AlexaInput input, final TextToSpeech tts) {
@@ -51,19 +57,46 @@ abstract class AbstractIntentHandler implements AlexaIntentHandler {
         final AWSDynamoStateHandler dynamoStateHandler = new AWSDynamoStateHandler(input.getSessionStateHandler().getSession());
         final LastTextToSpeech lastTts = new LastTextToSpeech(tts);
 
-        return AlexaOutput.tell("SayTranslate")
-                .withCard(card)
-                .putState(tts, lastTts.withHandler(dynamoStateHandler))
-                .build();
+        // if no one-shot this conversation keeps open and user can go on with other options
+        if (isConversation(input))  {
+            return AlexaOutput.ask("SayTranslateAndElse")
+                    .withCard(card)
+                    .withReprompt(true)
+                    .putState(tts, lastTts.withHandler(dynamoStateHandler))
+                    .build();
+        } else {
+            // a one-shot invocation returns the translation and ends the session
+            return AlexaOutput.tell("SayTranslate")
+                    .withCard(card)
+                    .putState(tts, lastTts.withHandler(dynamoStateHandler))
+                    .build();
+        }
     }
 
     AlexaOutput sayTranslate(final AlexaInput input, final String text) throws AlexaStateException {
         final TextToSpeechConverter ttsConverter = new TextToSpeechConverter(input);
 
         return ttsConverter.textToSpeech(text).map(tts -> sayTranslate(input, tts)).orElse(
-            AlexaOutput.tell("SayNoTranslation")
+            isConversation(input) ?
+                    AlexaOutput.ask("SayNoTranslationAndElse")
+                            .putSlot("text", text)
+                            .putSlot("language", ttsConverter.getLanguage())
+                            .withReprompt(true)
+                            .build() :
+                AlexaOutput.tell("SayNoTranslation")
                     .putSlot("text", text)
                     .putSlot("language", ttsConverter.getLanguage())
                     .build());
+    }
+
+    boolean isConversation(final AlexaInput input) {
+        // find out if this is no one-shot
+        Optional<SessionState> sessionState = Optional.empty();
+        try {
+            sessionState = input.getSessionStateHandler().readModel(SessionState.class);
+        } catch (final AlexaStateException e) {
+            log.error("Unable to read session state.", e);
+        }
+        return sessionState.isPresent() && sessionState.get().getConversation();
     }
 }

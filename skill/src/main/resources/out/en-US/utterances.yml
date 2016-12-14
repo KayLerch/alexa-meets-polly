@@ -1,8 +1,11 @@
+Languages: "[Russian|German|Spanish|Italian|Turkish|Polish|Portuguese|Japanese|Swedish|Norwegian|Romanian|Dutch|Danish|French]"
+SamplePhrases: "[Good morning|Hello|How are you|What's your name|Train station|football]"
+
 SayWelcome:
   Utterances:
     - "Hi. What do you want me to translate?"
   Reprompts:
-    - "Say something like <p>Good evening in russian</p>"
+    - "Say something like <p>${SamplePhrases}</p> in ${Languages}  or ask me for help."
 
 SayTranslate:
   - "{text} in {language} [is|translates to] {mp3}"
@@ -10,17 +13,44 @@ SayTranslate:
 SayNoTranslation:
   - "Sorry, I [could not|was not able to] translate {text} into {language}."
 
+SayNoTranslationAndElse:
+  Utterances:
+    - "Sorry, I [could not|was not able to] translate {text} into {language}."
+  Reprompts:
+    - "Say something like <p>${SamplePhrases}</p> in ${Languages} or ask me for help."
+
+SayTranslateAndElse:
+  Utterances:
+    - "{text} in {language} [is|translates to] {mp3} Anything else?"
+  Reprompts:
+    - "You can ask me to repeat the last translation or let me translate something else. Request help if you are lost."
+
+SayTranslateRequest:
+  Utterances:
+    - "Provide a word or phrase and the language I should translate into."
+  Reprompts:
+    - "For example say <p>${SamplePhrases}</p> in ${Languages}"
+
 SayOk:
   - "Ok"
 
 SayNothingToRepeat:
   - "[Excuse me|Sorry|I am sorry], but there is nothing for me to repeat. Let me translate something for you and I will keep it in mind for later repeating."
 
+SayNothingToRepeatAndElse:
+  Utterances:
+    - "[Excuse me|Sorry|I am sorry], but there is nothing for me to repeat. Let me translate something for you and I will keep it in mind for later repeating. Anything else?"
+  Reprompts:
+    - "For example say <p>${SamplePhrases}</p> in ${Languages}"
+
 SayHelp:
   Utterances:
-    - "I can translate common terms of your language into a lot of foreign languages. Say something like <p>How are you in German?</p>"
+    - "I can translate common terms of your language into a lot of foreign languages. Say something like <p>${SamplePhrases}</p> in ${Languages}"
   Reprompts:
-    - "Say something like <p>Good evening in russian?</p>"
+    - "Say something like <p>${SamplePhrases}</p> in ${Languages}"
 
 SaySorry:
-  - "[Excuse me|Sorry|I am sorry], an error occurred."
+  Utterances:
+    - "[Excuse me|Sorry|I am sorry], I could not understand what you were saying."
+  Reprompts:
+    - "Say something like <p>${SamplePhrases}</p> in ${Languages}"
