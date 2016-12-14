@@ -1,6 +1,5 @@
 src/main/java/io/klerch/alexa/translator/skill/Program.java
 src/main/resources/my.app.properties
-src/test/
 target/
 !.mvn/wrapper/maven-wrapper.jar
 
