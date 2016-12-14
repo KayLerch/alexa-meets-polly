@@ -28,10 +28,11 @@ an MP3 stream with the spoken translated term.
 due to differing audio settings required by SSML audio in Alexa.
 
 7. Therefore, the MP3-Url is given to a custom service-endpoint hosted in an [AWS EC2](https://aws.amazon.com/ec2) server instance. This service converts the bit-rate 
-to 48Khz as required by Alexa with help of FFMPEG.
+to 48Khz as required by Alexa with help of FFMPEG. Polly's voices are not as loud as Alexa's voice even if raising the volume with their prosody-setting to max. That's why
+this conversion also increases volume by 10dB. 
 
  ```bash
-ffmpeg -i https://s3.amazonaws.com/path-to-source.mp3 -ac 2 -codec:a libmp3lame -b:a 48k output.mp3
+ffmpeg -i https://s3.amazonaws.com/path-to-source.mp3 -ac 2 -codec:a libmp3lame -b:a 48k -ar 16000 -af volume=10dB output.mp3
  ```
 
  This is the actual [FFmpeg](https://ffmpeg.org/) command that converts the file in S3. The output file is saved to local disc in order to
