@@ -21,3 +21,8 @@ russian: "Tatyana"
 spanish: "Penelope"
 swedish: "Astrid"
 turkish: "Filiz"
+
+PREFIXES_TO_REMOVE:
+  - "what is "
+  - "translate "
+

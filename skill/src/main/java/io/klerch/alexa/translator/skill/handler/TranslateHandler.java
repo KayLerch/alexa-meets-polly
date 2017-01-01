@@ -21,9 +21,6 @@ public class TranslateHandler extends AbstractIntentHandler {
         if (input.hasSlotNotBlank("termB")) {
             sb.append(" ").append(input.getSlotValue("termB"));
         }
-
-        final String text = sb.toString().trim();
-
-        return sayTranslate(input, text);
+        return sayTranslate(input, sb.toString().trim());
     }
 }

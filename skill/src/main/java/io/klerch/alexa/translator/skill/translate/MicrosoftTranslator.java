@@ -12,7 +12,6 @@ import org.apache.http.impl.client.HttpClientBuilder;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.net.URLEncoder;
 import java.util.Optional;
 
 public class MicrosoftTranslator extends AbstractTranslator {

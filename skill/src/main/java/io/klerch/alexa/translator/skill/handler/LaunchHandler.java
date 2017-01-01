@@ -1,6 +1,5 @@
 package io.klerch.alexa.translator.skill.handler;
 
-import io.klerch.alexa.state.handler.AlexaStateHandler;
 import io.klerch.alexa.state.utils.AlexaStateException;
 import io.klerch.alexa.tellask.model.AlexaInput;
 import io.klerch.alexa.tellask.model.AlexaOutput;
@@ -13,7 +12,6 @@ import io.klerch.alexa.translator.skill.model.SessionState;
 public class LaunchHandler implements AlexaLaunchHandler {
 
     public AlexaOutput handleRequest(final AlexaInput input) throws AlexaRequestHandlerException, AlexaStateException {
-        final AlexaStateHandler sessionStateHandler = input.getSessionStateHandler();
         final SessionState sessionState = input.getSessionStateHandler().createModel(SessionState.class);
         // remember this skill was started as a conversation (rather than in a oneshot)
         sessionState.setConversation(true);

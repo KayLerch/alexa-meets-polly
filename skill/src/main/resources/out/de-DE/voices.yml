@@ -21,3 +21,11 @@ russisch: "Tatyana"
 spanisch: "Penelope"
 schwedisch: "Astrid"
 türkisch: "Filiz"
+
+PREFIXES_TO_REMOVE:
+  - "was heißt "
+  - "was heisst "
+  - "was bedeutet "
+  - "was ist "
+  - "übersetze "
+  - "frage wörterbuch nach "

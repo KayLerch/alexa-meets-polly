@@ -25,6 +25,7 @@ import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.Optional;
 
 public class TextToSpeechConverter {
@@ -38,6 +39,7 @@ public class TextToSpeechConverter {
     private final String voiceId;
     private final AlexaStateHandler dynamoStateHandler;
     private final AlexaStateHandler sessionStateHandler;
+    private final List<String> prefixesToRemove;
 
     public TextToSpeechConverter(final AlexaInput input) {
         // the locale is coming with the speechlet request and indicates to source language to translate from
@@ -57,6 +59,8 @@ public class TextToSpeechConverter {
         this.dynamoStateHandler = new AWSDynamoStateHandler(input.getSessionStateHandler().getSession());
         // retrieve voiceId from YAML file that maps to the language given by the user
         voiceId = language != null ? yamlReader.getRandomUtterance(language.toLowerCase().replace(" ", "_")).orElse("") : "";
+        // language-specific prefix phrases that accidently made it into the text slot and should be removed
+        prefixesToRemove = yamlReader.getUtterances("PREFIXES_TO_REMOVE");
         // without a voiceId there's not chance to fulfill the translation request
         Validate.notBlank(voiceId, "No voiceId is associated with given language.");
     }
@@ -105,17 +109,25 @@ public class TextToSpeechConverter {
      * @throws AlexaStateException error reading or writing state to Dynamo dictionary
      */
     public Optional<TextToSpeech> textToSpeech(final String text) throws AlexaStateException {
+        // remove invalid prefixes that accidently made it into the slots
+        final String textToTranslate = prefixesToRemove.stream()
+                .filter(prefix -> StringUtils.startsWithIgnoreCase(text, prefix))
+                .findFirst()
+                .map(prefix -> text.replaceFirst(prefix, ""))
+                // if none of these prefixes exist in the text, keep the text as is
+                .orElse(text);
+
         // look up previous translation in dictionary
-        Optional<TextToSpeech> tts = dynamoStateHandler.readModel(TextToSpeech.class, getDictionaryId(text));
+        Optional<TextToSpeech> tts = dynamoStateHandler.readModel(TextToSpeech.class, getDictionaryId(textToTranslate));
         // if there was a previous tts for this text return immediately (exception for the roundtrip-phrase used by the test-client)
-        if (tts.isPresent() && !StringUtils.equalsIgnoreCase(text, SkillConfig.getAlwaysRoundTripPhrase())) {
+        if (tts.isPresent() && !StringUtils.equalsIgnoreCase(textToTranslate, SkillConfig.getAlwaysRoundTripPhrase())) {
             // set handler to session to avoid writing back to dynamo (nothing changed)
             tts.get().setHandler(sessionStateHandler);
             return tts;
         }
 
         // translate term by leveraging a Translator implementation provided by the factory
-        final Optional<String> translated = TranslatorFactory.getTranslator(locale).translate(text, language);
+        final Optional<String> translated = TranslatorFactory.getTranslator(locale).translate(textToTranslate, language);
 
         if (translated.isPresent()) {
             // form the SSML by embedding the translated text
@@ -132,18 +144,18 @@ public class TextToSpeechConverter {
 
             try {
                 // store audio stream of Polly to S3 as an MP3 file
-                final PutObjectRequest s3Put = new PutObjectRequest(SkillConfig.getS3BucketName(), getMp3Path(text), synthResult.getAudioStream(), new ObjectMetadata())
+                final PutObjectRequest s3Put = new PutObjectRequest(SkillConfig.getS3BucketName(), getMp3Path(textToTranslate), synthResult.getAudioStream(), new ObjectMetadata())
                         .withCannedAcl(CannedAccessControlList.PublicRead);
                 awsS3.putObject(s3Put);
                 // as long as Polly output does not comply with Alexa MP3 format restriction we need to convert the MP3
                 if (!SkillConfig.shouldSkipMp3Conversion()) {
                     // call the REST service that encapsualtes the FFMPEG conversion on a server
-                    final String mp3ConvertedUrl = Mp3Converter.convertMp3(getMp3Url(text));
+                    final String mp3ConvertedUrl = Mp3Converter.convertMp3(getMp3Url(textToTranslate));
                     // validate this service returned a url (equal to success)
                     Validate.notBlank(mp3ConvertedUrl, "Conversion service did not return proper return value");
                 }
                 // build the TTS object with all the information needed to return output speech
-                return Optional.of(getTTS(text, translated.get()));
+                return Optional.of(getTTS(textToTranslate, translated.get()));
             } catch (final IOException | URISyntaxException e) {
                 log.error("Error while generating mp3. " + e.getMessage());
             }
