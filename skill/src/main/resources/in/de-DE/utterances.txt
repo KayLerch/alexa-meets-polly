@@ -1,13 +1,4 @@
-Translate Was ist {termA} auf {language}
-Translate Was ist {termA} auf {language}
-Translate nach {termA} in {language}
-Translate nach {termA} auf {language}
 Translate {termA} in {language}
 Translate {termA} auf {language}
-
-Translate Was ist {termA} {termB} auf {language}
-Translate Was ist {termA} {termB} auf {language}
-Translate nach {termA} {termB} in {language}
-Translate nach {termA} {termB} auf {language}
 Translate {termA} {termB} in {language}
 Translate {termA} {termB} auf {language}
