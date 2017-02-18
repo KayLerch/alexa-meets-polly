@@ -2,7 +2,8 @@ package io.klerch.alexa.translator.skill.translate;
 
 import java.util.Optional;
 
-public interface ITranslator {
+public interface Translator {
+    Optional<String> getTargetLangCodeIfSupported(final String language);
     /**
      * Translate the given text into the given language.
      * @param text The text to translate

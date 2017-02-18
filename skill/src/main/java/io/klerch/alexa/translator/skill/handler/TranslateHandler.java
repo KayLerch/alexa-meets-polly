@@ -9,8 +9,6 @@ import org.apache.log4j.Logger;
 
 @AlexaIntentListener(customIntents = "Translate")
 public class TranslateHandler extends AbstractIntentHandler {
-    private static final Logger log = Logger.getLogger(TranslateHandler.class);
-
     @Override
     public AlexaOutput handleRequest(final AlexaInput input) throws AlexaRequestHandlerException, AlexaStateException {
         final StringBuilder sb = new StringBuilder();

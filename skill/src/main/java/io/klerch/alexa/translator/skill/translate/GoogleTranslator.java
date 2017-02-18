@@ -10,7 +10,6 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,29 +32,24 @@ public class GoogleTranslator extends AbstractTranslator {
     }
 
     @Override
-    public Optional<String> translate(final String text, final String language) {
-        final Optional<String> code = language != null ? this.yamlReader.getRandomUtterance(language.toLowerCase().replace(" ", "_")) : Optional.empty();
-        final String sourceCode = this.locale.split("-")[0];
-
-        if (code.isPresent()) {
-            // if source and target language are the same return original term
-            if (code.get().equalsIgnoreCase(sourceCode)) {
-                return Optional.of(text);
-            }
-            try {
-                final Translate.Translations.List list = translator.new Translations().list(
-                        Collections.singletonList(text), code.get());
-                list.setKey(SkillConfig.getGoogleApiKey());
-                list.setSource(sourceCode);
-                final TranslationsListResponse response = list.execute();
-
-                if (!response.isEmpty() && !response.getTranslations().isEmpty()) {
-                    return Optional.of(StringEscapeUtils.unescapeHtml4(response.getTranslations().get(0).getTranslatedText()));
-                }
-            } catch (IOException e) {
-                log.severe(e.getMessage());
-            }
+    public String doTranslate(final String text, final String targetLanguageCode) {
+        if (targetLanguageCode.equalsIgnoreCase(sourceLanguageCode)) {
+            return text;
         }
-        return Optional.empty();
+
+        try {
+            final Translate.Translations.List list = translator.new Translations().list(
+                    Collections.singletonList(text), targetLanguageCode);
+            list.setKey(SkillConfig.getGoogleApiKey());
+            list.setSource(sourceLanguageCode);
+            final TranslationsListResponse response = list.execute();
+
+            if (!response.isEmpty() && !response.getTranslations().isEmpty()) {
+                return StringEscapeUtils.unescapeHtml4(response.getTranslations().get(0).getTranslatedText());
+            }
+        } catch (IOException e) {
+            log.severe(e.getMessage());
+        }
+        return null;
     }
 }

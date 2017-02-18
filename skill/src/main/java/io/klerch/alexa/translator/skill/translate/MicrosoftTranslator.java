@@ -12,7 +12,6 @@ import org.apache.http.impl.client.HttpClientBuilder;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Optional;
 
 public class MicrosoftTranslator extends AbstractTranslator {
     private static final String ServiceEndpointIssueToken = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
@@ -23,33 +22,29 @@ public class MicrosoftTranslator extends AbstractTranslator {
     }
 
     @Override
-    public Optional<String> translate(final String text, final String language) {
-        final Optional<String> code = language != null ? this.yamlReader.getRandomUtterance(language.toLowerCase().replace(" ", "_")) : Optional.empty();
-        final String sourceCode = this.locale.split("-")[0];
-
-        if (code.isPresent()) {
-            try {
-                // if source and target language are the same return original term
-                if (code.get().equalsIgnoreCase(sourceCode)) {
-                    return Optional.of(text);
-                }
-                final String accessToken = String.format("Bearer %1$s", getAccessToken());
-                final URIBuilder uri = new URIBuilder(ServiceEndpointTranslate)
-                        .addParameter("appid", accessToken)
-                        .addParameter("from", StringEscapeUtils.escapeHtml4(sourceCode))
-                        .addParameter("to", StringEscapeUtils.escapeHtml4(code.get()))
-                        .addParameter("contentType", "text/plain")
-                        .addParameter("text", StringEscapeUtils.escapeHtml4(text));
-                final HttpGet httpGet = new HttpGet(uri.build());
-                final HttpResponse response = HttpClientBuilder.create().build().execute(httpGet);
-                // work on response
-                final HttpEntity entity = response.getEntity();
-                return Optional.of(IOUtils.toString(entity.getContent(), "UTF-8").replaceAll("<[^>]*>", ""));
-            } catch (final IOException | URISyntaxException e) {
-                e.printStackTrace();
-            }
+    public String doTranslate(final String text, final String targetLanguageCode) {
+        // if source and target language are the same return original term
+        if (targetLanguageCode.equalsIgnoreCase(sourceLanguageCode)) {
+            return text;
         }
-        return Optional.empty();
+
+        try {
+            final String accessToken = String.format("Bearer %1$s", getAccessToken());
+            final URIBuilder uri = new URIBuilder(ServiceEndpointTranslate)
+                    .addParameter("appid", accessToken)
+                    .addParameter("from", StringEscapeUtils.escapeHtml4(sourceLanguageCode))
+                    .addParameter("to", StringEscapeUtils.escapeHtml4(targetLanguageCode))
+                    .addParameter("contentType", "text/plain")
+                    .addParameter("text", StringEscapeUtils.escapeHtml4(text));
+            final HttpGet httpGet = new HttpGet(uri.build());
+            final HttpResponse response = HttpClientBuilder.create().build().execute(httpGet);
+            // work on response
+            final HttpEntity entity = response.getEntity();
+            return IOUtils.toString(entity.getContent(), "UTF-8").replaceAll("<[^>]*>", "");
+        } catch (final IOException | URISyntaxException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private String getAccessToken() throws URISyntaxException, IOException {

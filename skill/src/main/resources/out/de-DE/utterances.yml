@@ -1,9 +1,13 @@
 Languages: "[Russisch|Englisch|Spanisch|Italienisch|Türkisch|Polnisch|Portugiesisch|Japanisch|Schwedisch|Norwegisch|Rumanisch|Niederländisch|Dänisch|Französisch]"
 SamplePhrases: "[Guten Tag|Guten Abend|Hallo|Wie geht es dir|Wie heißt du|Bahnhof|Fußball]"
 
+Hello: "[Hallo|Hi|Willkommen|Guten Tag]!"
+Etwas: "<phoneme alphabet='ipa' ph='ɛtvas'>etwas</phoneme>"
+Sorry: "[Entschuldige|Sorry|Tut mir leid|Upps]"
+
 SayWelcome:
   Utterances:
-    - "Hallo. Was möchtest du mich übersetzen lassen?"
+    - "${Hello} Was möchtest du mich übersetzen lassen?"
   Reprompts:
     - "Sage zum Beispiel <p>${SamplePhrases}</p> [auf|in] ${Languages}"
 
@@ -12,9 +16,18 @@ SayTranslate:
 
 SayTranslateAndElse:
   Utterances:
-    - "{text} [auf|in] {language} [lautet|bedeutet|heißt|klingt so] {mp3} Noch etwas?"
+    - "{text} [auf|in] {language} [lautet|bedeutet|heißt|klingt so] {mp3} Noch ${Etwas}?"
   Reprompts:
     - "Du kannst mich wiederholen lassen oder etwas anderes übersetzen lassen. Wenn du nicht weiter weißt, frage mich nach Hilfe."
+
+SayUnsupportedLanguages:
+  - "${Sorry}, ich kann noch nichts nach {language} übersetzen aber das lerne ich sicher bald."
+
+SayUnsupportedLanguagesAndElse:
+  Utterances:
+    - "${Sorry}, ich kann noch nichts nach {language} übersetzen aber das lerne ich sicher bald. Noch ${Etwas}?"
+  Reprompts:
+    - "Sage zum Beispiel <p>${SamplePhrases}</p> [auf|in] ${Languages}"
 
 SayTranslateRequest:
   Utterances:
@@ -23,11 +36,11 @@ SayTranslateRequest:
     - "Sage zum Beispiel <p>${SamplePhrases}</p> [auf|in] ${Languages}"
 
 SayNoTranslation:
-  - "Entschuldige, aber {text} konnte ich nicht nach {language} übersetzen."
+  - "${Sorry}, aber {text} konnte ich nicht nach {language} übersetzen."
 
 SayNoTranslationAndElse:
   Utterances:
-    - "Entschuldige, aber {text} konnte ich nicht nach {language} übersetzen. Noch etwas?"
+    - "${Sorry}, aber {text} konnte ich nicht nach {language} übersetzen. Noch ${Etwas}?"
   Reprompts:
     - "Sage zum Beispiel <p>${SamplePhrases}</p> [auf|in] ${Languages}"
 
@@ -35,22 +48,22 @@ SayOk:
   - "Ok"
 
 SayNothingToRepeat:
-  - "[Entschuldige|Sorry|Tut mir leid], es gibt für mich nichts zum Wiederholen. Sobald ich etwas für dich übersetzt habe, merke ich es mir und wiederhole später gern."
+  - "${Sorry}, es gibt für mich nichts zum Wiederholen. Sobald ich etwas für dich übersetzt habe, merke ich es mir und wiederhole später gern."
 
 SayNothingToRepeatAndElse:
   Utterances:
-    - "[Entschuldige|Sorry|Tut mir leid], es gibt für mich nichts zum Wiederholen. Sobald ich etwas für dich übersetzt habe, merke ich es mir und wiederhole später gern. Noch etwas?"
+    - "${Sorry}, es gibt für mich nichts zum Wiederholen. Sobald ich etwas für dich übersetzt habe, merke ich es mir und wiederhole später gern. Noch ${Etwas}?"
   Reprompts:
     - "Sage zum Beispiel <p>${SamplePhrases}</p> [auf|in] ${Languages}"
 
 SayHelp:
   Utterances:
-    - "Ich kann dir viele Wörter aus dem Deutschen in fremde Sprachen übersetzen. Sage dazu beispielsweise <p>${SamplePhrases}</p> [auf|in] ${Languages}"
+    - "Ich kann dir viele Wörter aus dem Deutschen in fremde Sprachen übersetzen. Sage dazu beispielsweise <p> Übersetze ${SamplePhrases}</p> [auf|in] ${Languages}"
   Reprompts:
     - "Sage zum Beispiel <p>${SamplePhrases}</p> [auf|in] ${Languages}"
 
 SaySorry:
   Utterances:
-    - "[Entschuldige|Sorry|Tut mir leid], das [konnte ich nicht deuten|habe ich nicht verstanden]. Probiere es erneut und gebe Acht auf eine exakte Aussprache. Oder aber frage mich nach Hilfe."
+    - "${Sorry}, das [probiere bitte nochmal|musst du nochmal probieren|versuche bitte erneut|musst du nochmal versuchen]."
   Reprompts:
     - "Sage zum Beispiel <p>${SamplePhrases}</p> [auf|in] ${Languages}"

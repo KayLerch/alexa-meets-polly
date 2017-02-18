@@ -18,6 +18,7 @@ import io.klerch.alexa.tellask.util.resource.ResourceUtteranceReader;
 import io.klerch.alexa.tellask.util.resource.YamlReader;
 import io.klerch.alexa.translator.skill.SkillConfig;
 import io.klerch.alexa.translator.skill.model.TextToSpeech;
+import io.klerch.alexa.translator.skill.translate.Translator;
 import io.klerch.alexa.translator.skill.translate.TranslatorFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -32,6 +33,7 @@ public class TextToSpeechConverter {
     private static final Logger log = Logger.getLogger(TextToSpeechConverter.class);
 
     private final String locale;
+    private final Translator translator;
     private final String language;
     private final YamlReader yamlReader;
     private final AmazonPolly awsPolly;
@@ -44,6 +46,8 @@ public class TextToSpeechConverter {
     public TextToSpeechConverter(final AlexaInput input) {
         // the locale is coming with the speechlet request and indicates to source language to translate from
         this.locale = input.getLocale();
+        // get translator
+        this.translator = TranslatorFactory.getTranslator(this.locale);
         // the language is taken from the user input (slot value) and indicates to language to translate to
         this.language = input.getSlotValue("language");
         final ResourceUtteranceReader reader = new ResourceUtteranceReader("/out", "/voices.yml");
@@ -61,8 +65,6 @@ public class TextToSpeechConverter {
         voiceId = language != null ? yamlReader.getRandomUtterance(language.toLowerCase().replace(" ", "_")).orElse("") : "";
         // language-specific prefix phrases that accidently made it into the text slot and should be removed
         prefixesToRemove = yamlReader.getUtterances("PREFIXES_TO_REMOVE");
-        // without a voiceId there's not chance to fulfill the translation request
-        Validate.notBlank(voiceId, "No voiceId is associated with given language.");
     }
 
     /**
@@ -99,6 +101,10 @@ public class TextToSpeechConverter {
         return SkillConfig.getS3BucketUrl() + getMp3Path(text);
     }
 
+    public boolean hasSupportedLanguage() {
+        return translator.getTargetLangCodeIfSupported(language).isPresent();
+    }
+
     /**
      * Returns text-to-speech of a translation of a given text. Before translating the text,
      * requesting speech from AWS Polly and storing the resulting MP3 to S3 this method looks
@@ -127,11 +133,13 @@ public class TextToSpeechConverter {
         }
 
         // translate term by leveraging a Translator implementation provided by the factory
-        final Optional<String> translated = TranslatorFactory.getTranslator(locale).translate(textToTranslate, language);
+        final Optional<String> translated = translator.translate(textToTranslate, language);
 
         if (translated.isPresent()) {
+            // without a voiceId there's not chance to fulfill the translation request
+            Validate.notBlank(voiceId, "No voiceId is associated with given language.");
             // form the SSML by embedding the translated text
-            final String ssml = String.format("<speak><prosody rate='-30%%' volume='x-loud'>%1$s</prosody></speak>", translated.get());
+            final String ssml = String.format("<speak><prosody rate='-20%%' volume='x-loud'>%1$s</prosody></speak>", translated.get());
             // build a Polly request to get speech with desired voice and SSML
             final SynthesizeSpeechRequest synthRequest = new SynthesizeSpeechRequest()
                     .withText(ssml)

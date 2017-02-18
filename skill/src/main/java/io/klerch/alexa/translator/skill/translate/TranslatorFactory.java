@@ -9,9 +9,9 @@ public class TranslatorFactory {
      * @param locale the locale coming in with a speechlet request
      * @return appropriate translator set up in the app configuration
      */
-    public static ITranslator getTranslator(final String locale) {
+    public static Translator getTranslator(final String locale) {
         final String translatorId = SkillConfig.getTranslatorService();
-        final ITranslator translator =
+        final Translator translator =
                 "Microsoft".equals(translatorId) ? new MicrosoftTranslator(locale) :
                 "Google".equals(translatorId) ? new GoogleTranslator(locale) : null;
         Validate.notNull(translator, "Invalid TranslatorService set up in the configuration.");

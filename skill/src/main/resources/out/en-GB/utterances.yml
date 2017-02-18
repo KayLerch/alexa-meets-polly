@@ -1,5 +1,6 @@
 Languages: "[Russian|German|Spanish|Italian|Turkish|Polish|Portuguese|Japanese|Swedish|Norwegian|Romanian|Dutch|Danish|French]"
 SamplePhrases: "[Good morning|Hello|How are you|What's your name|Train station|football]"
+Sorry: "[Excuse me|Sorry|I am sorry]"
 
 SayWelcome:
   Utterances:
@@ -10,20 +11,29 @@ SayWelcome:
 SayTranslate:
   - "{text} in {language} [is|translates to] {mp3}"
 
+SayTranslateAndElse:
+  Utterances:
+    - "{text} in {language} [is|translates to] {mp3} What else?"
+  Reprompts:
+    - "You can ask me to repeat the last translation or let me translate something else. Request help if you are lost."
+
 SayNoTranslation:
   - "Sorry, I [could not|was not able to] translate {text} into {language}."
 
 SayNoTranslationAndElse:
   Utterances:
-    - "Sorry, I [could not|was not able to] translate {text} into {language}."
+    - "Sorry, I [could not|was not able to] translate {text} into {language}. Anything else?"
   Reprompts:
     - "Say something like <p>${SamplePhrases}</p> in ${Languages} or ask me for help."
 
-SayTranslateAndElse:
+SayUnsupportedLanguages:
+  - "${Sorry}, currently I cannot translate to {language} but maybe this is something I will learn soon."
+
+SayUnsupportedLanguagesAndElse:
   Utterances:
-    - "{text} in {language} [is|translates to] {mp3} Anything else?"
+    - "${Sorry}, currently I cannot translate to {language} but maybe this is something I will learn soon. What else?"
   Reprompts:
-    - "You can ask me to repeat the last translation or let me translate something else. Request help if you are lost."
+    - "For example say <p>${SamplePhrases}</p> in ${Languages}"
 
 SayTranslateRequest:
   Utterances:
@@ -35,11 +45,11 @@ SayOk:
   - "Ok"
 
 SayNothingToRepeat:
-  - "[Excuse me|Sorry|I am sorry], but there is nothing for me to repeat. Let me translate something for you and I will keep it in mind for later repeating."
+  - "${Sorry}, but there is nothing for me to repeat. Let me translate something for you and I will keep it in mind for later repeating."
 
 SayNothingToRepeatAndElse:
   Utterances:
-    - "[Excuse me|Sorry|I am sorry], but there is nothing for me to repeat. Let me translate something for you and I will keep it in mind for later repeating. Anything else?"
+    - "${Sorry}, but there is nothing for me to repeat. Let me translate something for you and I will keep it in mind for later repeating. Anything else?"
   Reprompts:
     - "For example say <p>${SamplePhrases}</p> in ${Languages}"
 
@@ -51,6 +61,6 @@ SayHelp:
 
 SaySorry:
   Utterances:
-    - "[Excuse me|Sorry|I am sorry], I could not understand what you were saying."
+    - "${Sorry}, I could not understand what you were saying."
   Reprompts:
     - "Say something like <p>${SamplePhrases}</p> in ${Languages}"

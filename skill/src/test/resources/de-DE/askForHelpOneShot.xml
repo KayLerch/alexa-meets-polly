@@ -1,0 +1,19 @@
+<script xmlns="http://klerch.io/alexa/skills-kit-tester">
+    <configuration>
+        <endpoint type="RequestStreamHandler">io.klerch.alexa.translator.skill.TranslatorSpeechletHandler</endpoint>
+        <locale>de-DE</locale>
+        <application id="will-be-overridden"/>
+    </configuration>
+    <sessions>
+        <session>
+            <help>
+                <assertMatches asset="OutputSpeechSsml" value=".*Ich kann dir viele Wörter aus dem Deutschen in fremde Sprachen übersetzen.*"/>
+                <assertNotExists asset="Card"/>
+                <assertSessionStillOpen />
+            </help>
+            <stop>
+                <assertSessionEnded />
+            </stop>
+        </session>
+    </sessions>
+</script>

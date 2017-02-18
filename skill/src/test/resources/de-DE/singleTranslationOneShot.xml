@@ -1,0 +1,25 @@
+<script xmlns="http://klerch.io/alexa/skills-kit-tester">
+    <configuration>
+        <endpoint type="RequestStreamHandler">io.klerch.alexa.translator.skill.TranslatorSpeechletHandler</endpoint>
+        <locale>de-DE</locale>
+        <application id="will-be-overridden"/>
+    </configuration>
+    <sessions>
+        <session>
+            <intent name="Translate">
+                <request>
+                    <slots>
+                        <slot key="language" value="englisch"></slot>
+                        <slot key="termA" value="guten"></slot>
+                        <slot key="termB" value="morgen"></slot>
+                    </slots>
+                </request>
+                <assertMatches asset="OutputSpeechSsml" value=".*guten morgen.*englisch.*mp3.*"/>
+                <assertMatches asset="StandardCardTitle" value=".*Guten morgen.*Good morning.*"/>
+                <assertExists asset="StandardCardLargeImageUrl" />
+                <assertNotExists asset="RepromptSpeech"/>
+                <assertSessionEnded />
+            </intent>
+        </session>
+    </sessions>
+</script>

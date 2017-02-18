@@ -1,0 +1,47 @@
+<script xmlns="http://klerch.io/alexa/skills-kit-tester">
+    <configuration>
+        <endpoint type="RequestStreamHandler">io.klerch.alexa.translator.skill.TranslatorSpeechletHandler</endpoint>
+        <locale>de-DE</locale>
+        <application id="will-be-overridden"/>
+    </configuration>
+    <sessions>
+        <session>
+            <launch>
+                <assertMatches asset="OutputSpeechSsml" value=".*Was möchtest du mich übersetzen lassen.*"/>
+                <assertSessionStillOpen />
+            </launch>
+            <intent name="Translate">
+                <request>
+                    <slots>
+                        <slot key="language" value="englisch"></slot>
+                        <slot key="termA" value="auto"></slot>
+                    </slots>
+                </request>
+                <assertMatches asset="OutputSpeechSsml" value=".*auto.*englisch.*mp3.*"/>
+                <assertMatches asset="StandardCardTitle" value=".*Auto.*Car.*"/>
+                <assertExists asset="StandardCardLargeImageUrl" />
+                <assertExists asset="RepromptSpeech"/>
+                <assertSessionStillOpen />
+            </intent>
+            <repeat>
+                <assertMatches asset="OutputSpeechSsml" value=".*auto.*englisch.*mp3.*"/>
+                <assertMatches asset="StandardCardTitle" value=".*Auto.*Car.*"/>
+                <assertExists asset="StandardCardLargeImageUrl" />
+                <assertExists asset="RepromptSpeech"/>
+                <assertSessionStillOpen />
+            </repeat>
+            <no>
+                <assertSessionEnded/>
+            </no>
+        </session>
+        <session>
+            <repeat>
+                <assertMatches asset="OutputSpeechSsml" value=".*auto.*englisch.*mp3.*"/>
+                <assertMatches asset="StandardCardTitle" value=".*Auto.*Car.*"/>
+                <assertNotExists asset="RepromptSpeech"/>
+                <assertExists asset="StandardCardLargeImageUrl" />
+                <assertSessionEnded/>
+            </repeat>
+        </session>
+    </sessions>
+</script>

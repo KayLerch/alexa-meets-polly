@@ -6,14 +6,14 @@
 
     <groupId>io.klerch</groupId>
     <artifactId>alexa.translator.skill</artifactId>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
 
     <properties>
         <maven.surefire.failsafe.version>2.16</maven.surefire.failsafe.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <io.klerch.tellask.version>0.2.2</io.klerch.tellask.version>
-        <io.klerch.tester.version>0.1.0</io.klerch.tester.version>
-        <aws.version>1.11.63</aws.version>
+        <io.klerch.tester.version>0.1.1</io.klerch.tester.version>
+        <aws.version>1.11.93</aws.version>
         <aws.lambda.version>1.1.0</aws.lambda.version>
         <aws.log4j.version>1.0.0</aws.log4j.version>
         <junit.version>4.12</junit.version>
@@ -135,11 +135,13 @@
             <groupId>com.google.apis</groupId>
             <artifactId>google-api-services-translate</artifactId>
             <version>v2-rev48-1.22.0</version>
+            <scope>provided</scope> <!-- remove this line if you set Google as translator -->
         </dependency>
         <dependency>
             <groupId>com.google.http-client</groupId>
             <artifactId>google-http-client-gson</artifactId>
             <version>1.22.0</version>
+            <scope>provided</scope> <!-- remove this line if you set Google as translator -->
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -153,6 +155,11 @@
             <version>${io.klerch.tester.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>joox</artifactId>
+            <version>1.4.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
-
 </project>

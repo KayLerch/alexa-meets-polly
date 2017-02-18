@@ -42,6 +42,8 @@ abstract class AbstractIntentHandler implements AlexaIntentHandler {
     }
 
     AlexaOutput sayTranslate(final AlexaInput input, final TextToSpeech tts) {
+
+
         final StandardCard card = new StandardCard();
         card.setTitle(StringUtils.capitalize(tts.getText()) + " : " + StringUtils.capitalize(tts.getTranslatedText()));
         card.setText("http://aka.ms/MicrosoftTranslatorAttribution");
@@ -76,17 +78,28 @@ abstract class AbstractIntentHandler implements AlexaIntentHandler {
     AlexaOutput sayTranslate(final AlexaInput input, final String text) throws AlexaStateException {
         final TextToSpeechConverter ttsConverter = new TextToSpeechConverter(input);
 
-        return ttsConverter.textToSpeech(text).map(tts -> sayTranslate(input, tts)).orElse(
-            isConversation(input) ?
-                    AlexaOutput.ask("SayNoTranslationAndElse")
-                            .putSlot("text", text)
+        if (ttsConverter.hasSupportedLanguage()) {
+            return ttsConverter.textToSpeech(text).map(tts -> sayTranslate(input, tts)).orElse(
+                    isConversation(input) ?
+                            AlexaOutput.ask("SayNoTranslationAndElse")
+                                    .putSlot("text", text)
+                                    .putSlot("language", ttsConverter.getLanguage())
+                                    .withReprompt(true)
+                                    .build() :
+                            AlexaOutput.tell("SayNoTranslation")
+                                    .putSlot("text", text)
+                                    .putSlot("language", ttsConverter.getLanguage())
+                                    .build());
+        } else {
+            return isConversation(input) ?
+                    AlexaOutput.ask("SayUnsupportedLanguagesAndElse")
                             .putSlot("language", ttsConverter.getLanguage())
                             .withReprompt(true)
                             .build() :
-                AlexaOutput.tell("SayNoTranslation")
-                    .putSlot("text", text)
-                    .putSlot("language", ttsConverter.getLanguage())
-                    .build());
+                    AlexaOutput.tell("SayUnsupportedLanguages")
+                            .putSlot("language", ttsConverter.getLanguage())
+                            .build();
+        }
     }
 
     boolean isConversation(final AlexaInput input) {

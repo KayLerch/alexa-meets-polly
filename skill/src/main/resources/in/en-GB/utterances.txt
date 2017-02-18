@@ -1,7 +1,6 @@
-Translate what is {termA} in {language}
-Translate for {termA} in {language}
 Translate {termA} in {language}
-
-Translate what is {termA} {termB} in {language}
-Translate for {termA} {termB} in {language}
+Translate {termA} to {language}
+Translate {termA} into {language}
 Translate {termA} {termB} in {language}
+Translate {termA} {termB} to {language}
+Translate {termA} {termB} into {language}
