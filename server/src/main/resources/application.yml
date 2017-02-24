@@ -8,7 +8,3 @@ security:
 
 logging:
   file: logs/application.log
-
-my:
-  bucket: io.klerch.alexa.translator
-  bucketUrl: https://s3.amazonaws.com/io.klerch.alexa.translator/

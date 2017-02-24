@@ -42,7 +42,12 @@
 		<dependency>
 			<groupId>com.amazonaws</groupId>
 			<artifactId>aws-java-sdk-s3</artifactId>
-			<version>1.11.63</version>
+			<version>1.11.95</version>
+		</dependency>
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-sts</artifactId>
+			<version>1.11.95</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

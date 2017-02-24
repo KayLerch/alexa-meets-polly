@@ -3,7 +3,6 @@ package io.klerch.alexa.translator.util;
 import net.bramp.ffmpeg.FFmpeg;
 import net.bramp.ffmpeg.FFmpegExecutor;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
-import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -13,7 +12,6 @@ import java.net.URLEncoder;
 import java.util.UUID;
 
 public class FFmpegUtils {
-    private static String AUDIO_MP3_CODEC = "libmp3lame";
 
     public static File convertUrlToMp3(final String url) throws IOException {
         final String mp3Filename = UUID.randomUUID().toString() + ".mp3";
@@ -25,7 +23,7 @@ public class FFmpegUtils {
                 .setInput(escUrl)
                 .overrideOutputFiles(true)
                 .addOutput(mp3Filename)
-                .setAudioCodec(AUDIO_MP3_CODEC)
+                .setAudioCodec("libmp3lame")
                 .setAudioChannels(FFmpeg.AUDIO_MONO)
                 .setAudioBitRate(FFmpeg.AUDIO_SAMPLE_48000)
                 .setAudioSampleRate(FFmpeg.AUDIO_SAMPLE_16000)

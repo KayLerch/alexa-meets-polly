@@ -12,8 +12,8 @@ public class TranslatorFactory {
     public static Translator getTranslator(final String locale) {
         final String translatorId = SkillConfig.getTranslatorService();
         final Translator translator =
-                "Microsoft".equals(translatorId) ? new MicrosoftTranslator(locale) :
-                "Google".equals(translatorId) ? new GoogleTranslator(locale) : null;
+                "Microsoft".equalsIgnoreCase(translatorId) ? new MicrosoftTranslator(locale) :
+                "Google".equalsIgnoreCase(translatorId) ? new GoogleTranslator(locale) : null;
         Validate.notNull(translator, "Invalid TranslatorService set up in the configuration.");
         return translator;
     }

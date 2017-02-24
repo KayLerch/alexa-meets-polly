@@ -16,12 +16,13 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 public class Mp3Converter {
-    public static String convertMp3(final String mp3Url) throws URISyntaxException, IOException {
+    public static String convertMp3(final String mp3Path) throws URISyntaxException, IOException {
         // get credentials for webservice from application config
         final String apiKey = SkillConfig.getTranslatorConvertServiceUser();
         final String apiPass = SkillConfig.getTranslatorConvertServicePass();
         // build uri
-        final URIBuilder uri = new URIBuilder(SkillConfig.getTranslatorConvertServiceUrl()).addParameter("mp3", mp3Url);
+        final String bucketName = SkillConfig.getS3BucketName();
+        final URIBuilder uri = new URIBuilder(SkillConfig.getTranslatorConvertServiceUrl()).addParameter("bucket", bucketName).addParameter("path", mp3Path);
         // set up web request
         final HttpGet httpGet = new HttpGet(uri.build());
         httpGet.setHeader("Content-Type", "text/plain");

@@ -1,12 +1,13 @@
 package io.klerch.alexa.translator.skill.tts;
 
 import com.amazonaws.services.polly.AmazonPolly;
-import com.amazonaws.services.polly.AmazonPollyClient;
+import com.amazonaws.services.polly.AmazonPollyClientBuilder;
 import com.amazonaws.services.polly.model.OutputFormat;
 import com.amazonaws.services.polly.model.SynthesizeSpeechRequest;
 import com.amazonaws.services.polly.model.SynthesizeSpeechResult;
 import com.amazonaws.services.polly.model.TextType;
-import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
@@ -37,7 +38,7 @@ public class TextToSpeechConverter {
     private final String language;
     private final YamlReader yamlReader;
     private final AmazonPolly awsPolly;
-    private final AmazonS3Client awsS3;
+    private final AmazonS3 awsS3;
     private final String voiceId;
     private final AlexaStateHandler dynamoStateHandler;
     private final AlexaStateHandler sessionStateHandler;
@@ -54,9 +55,9 @@ public class TextToSpeechConverter {
         // the yaml reader reads values from YAML file to get a Polly voiceId for a language
         this.yamlReader = new YamlReader(reader, locale);
         // Polly client to request speech of a translated text
-        this.awsPolly = new AmazonPollyClient();
+        this.awsPolly = AmazonPollyClientBuilder.standard().build();
         // S3 client to store MP3 with speech of a translated text
-        this.awsS3 = new AmazonS3Client();
+        this.awsS3 = AmazonS3ClientBuilder.standard().build();
         // session state handler to read/write skill state information to Alexa session
         this.sessionStateHandler = input.getSessionStateHandler();
         // dynamo state handler to read/write skill state information to DynamoDB
@@ -158,7 +159,7 @@ public class TextToSpeechConverter {
                 // as long as Polly output does not comply with Alexa MP3 format restriction we need to convert the MP3
                 if (!SkillConfig.shouldSkipMp3Conversion()) {
                     // call the REST service that encapsualtes the FFMPEG conversion on a server
-                    final String mp3ConvertedUrl = Mp3Converter.convertMp3(getMp3Url(textToTranslate));
+                    final String mp3ConvertedUrl = Mp3Converter.convertMp3(getMp3Path(textToTranslate));
                     // validate this service returned a url (equal to success)
                     Validate.notBlank(mp3ConvertedUrl, "Conversion service did not return proper return value");
                 }
