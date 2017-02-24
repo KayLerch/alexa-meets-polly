@@ -66,7 +66,7 @@ public class ConvertService {
         if (StringUtils.isNullOrEmpty(roleArn)) {
             return AmazonS3ClientBuilder.standard().withRegion(awsRegion).build();
         } else {
-            final AssumeRoleRequest assumeRole = new AssumeRoleRequest().withRoleArn(roleArn);
+            final AssumeRoleRequest assumeRole = new AssumeRoleRequest().withRoleArn(roleArn).withRoleSessionName("io-klerch-mp3-converter");
 
             final AWSSecurityTokenService sts = AWSSecurityTokenServiceClientBuilder.standard().withRegion(awsRegion).build();
             final Credentials credentials = sts.assumeRole(assumeRole).getCredentials();
