@@ -2,6 +2,7 @@ package io.klerch.alexa.translator.skill.tts;
 
 import io.klerch.alexa.translator.skill.SkillConfig;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.Validate;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
@@ -33,6 +34,8 @@ public class Mp3Converter {
         // send request to convert webservice
         final HttpResponse response =
                 HttpClientBuilder.create().setDefaultCredentialsProvider(provider).build().execute(httpGet);
+
+        Validate.inclusiveBetween(200, 399, response.getStatusLine().getStatusCode());
         // work on response
         final HttpEntity entity = response.getEntity();
         return IOUtils.toString(entity.getContent(), "UTF-8");
