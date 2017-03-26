@@ -42,7 +42,7 @@ public class MicrosoftTranslator extends AbstractTranslator {
             final HttpGet httpGet = new HttpGet(uri.build());
             final HttpResponse response = HttpClientBuilder.create().build().execute(httpGet);
 
-            Validate.inclusiveBetween(200, 399, response.getStatusLine().getStatusCode());
+            Validate.inclusiveBetween(200, 399, response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase());
 
             // work on response
             final HttpEntity entity = response.getEntity();
@@ -61,7 +61,7 @@ public class MicrosoftTranslator extends AbstractTranslator {
         httpPost.setHeader("Ocp-Apim-Subscription-Key", SkillConfig.getMicrosoftSubscriptionKey());
         final HttpResponse response = HttpClientBuilder.create().build().execute(httpPost);
 
-        Validate.inclusiveBetween(200, 399, response.getStatusLine().getStatusCode());
+        Validate.inclusiveBetween(200, 399, response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase());
 
         // work on response
         final HttpEntity entity = response.getEntity();

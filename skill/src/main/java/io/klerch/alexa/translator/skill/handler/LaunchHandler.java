@@ -13,7 +13,7 @@ public class LaunchHandler implements AlexaLaunchHandler {
 
     public AlexaOutput handleRequest(final AlexaInput input) throws AlexaRequestHandlerException, AlexaStateException {
         final SessionState sessionState = input.getSessionStateHandler().createModel(SessionState.class);
-        // remember this skill was started as a conversation (rather than in a oneshot)
+        // remember this skill was started as a conversation (rather than in with a one-shot)
         sessionState.setConversation(true);
 
         return AlexaOutput.ask("SayWelcome")
