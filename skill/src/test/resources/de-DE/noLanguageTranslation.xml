@@ -1,0 +1,21 @@
+<script xmlns="http://klerch.io/alexa/skills-kit-tester">
+    <configuration>
+        <endpoint type="RequestStreamHandler">io.klerch.alexa.translator.skill.TranslatorSpeechletHandler</endpoint>
+        <locale>de-DE</locale>
+        <application id="will-be-overridden"/>
+    </configuration>
+    <sessions>
+        <session>
+            <intent name="Translate">
+                <request>
+                    <slots>
+                        <slot key="language" value=""></slot>
+                        <slot key="termA" value="morgen"></slot>
+                    </slots>
+                </request>
+                <assertMatches asset="OutputSpeechSsml" value=".*Ich brauche eine Sprache in die ich übersetzen soll.*morgen.*"/>
+                <sessionStillOpen />
+            </intent>
+        </session>
+    </sessions>
+</script>

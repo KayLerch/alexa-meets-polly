@@ -26,6 +26,12 @@ SayNoTranslationAndElse:
   Reprompts:
     - "Say something like <p>${SamplePhrases}</p> in ${Languages} or ask me for help."
 
+SayNoLanguage:
+  Utterances:
+    - "I need to know the language. Ask me something like, What is {text}, in ${Languages}."
+  Reprompts:
+    - "Ask me something like, {text}, in ${Languages}."
+
 SayUnsupportedLanguages:
   - "${Sorry}, currently I cannot translate to {language} but maybe this is something I will learn soon."
 

@@ -74,6 +74,13 @@ abstract class AbstractIntentHandler implements AlexaIntentHandler {
     }
 
     AlexaOutput sayTranslate(final AlexaInput input, final String text) throws AlexaStateException {
+        if (!input.hasSlotNotBlank("language")) {
+            return AlexaOutput.ask("SayNoLanguage")
+                    .putSlot("text", text)
+                    .withReprompt(true)
+                    .build();
+        }
+
         final TextToSpeechConverter ttsConverter = new TextToSpeechConverter(input);
 
         if (ttsConverter.hasSupportedLanguage()) {

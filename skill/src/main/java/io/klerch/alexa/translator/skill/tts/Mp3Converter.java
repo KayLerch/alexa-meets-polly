@@ -35,7 +35,7 @@ public class Mp3Converter {
         final HttpResponse response =
                 HttpClientBuilder.create().setDefaultCredentialsProvider(provider).build().execute(httpGet);
 
-        Validate.inclusiveBetween(200, 399, response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase());
+        //Validate.inclusiveBetween(200, 399, response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase());
         // work on response
         final HttpEntity entity = response.getEntity();
         return IOUtils.toString(entity.getContent(), "UTF-8");

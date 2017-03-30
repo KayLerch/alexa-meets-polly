@@ -25,6 +25,21 @@ SayTranslateAndElse:
   Reprompts:
     - "You can ask me to repeat the last translation or let me translate something else. Request help if you are lost."
 
+SayNoLanguage:
+  Utterances:
+    - "I need to know the language. Ask me something like, What is {text}, in ${Languages}."
+  Reprompts:
+    - "Ask me something like, {text}, in ${Languages}."
+
+SayUnsupportedLanguages:
+  - "${Sorry}, currently I cannot translate to {language} but maybe this is something I will learn soon."
+
+SayUnsupportedLanguagesAndElse:
+  Utterances:
+    - "${Sorry}, currently I cannot translate to {language} but maybe this is something I will learn soon. What else?"
+  Reprompts:
+    - "For example say <p>${SamplePhrases}</p> in ${Languages}"
+
 SayTranslateRequest:
   Utterances:
     - "Provide a word or phrase and the language I should translate into."

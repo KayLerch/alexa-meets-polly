@@ -44,6 +44,12 @@ SayNoTranslationAndElse:
   Reprompts:
     - "Sage zum Beispiel <p>${SamplePhrases}</p> [auf|in] ${Languages}"
 
+SayNoLanguage:
+  Utterances:
+    - "Ich brauche eine Sprache in die ich übersetzen soll. Frage zum Beispiel, Was ist {text}, [auf|in] ${Languages}."
+  Reprompts:
+    - "Frage zum Beispiel Was ist {text}, [auf|in] ${Languages}."
+
 SayOk:
   - "Ok"
 
