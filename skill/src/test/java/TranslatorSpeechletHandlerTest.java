@@ -31,6 +31,7 @@ public class TranslatorSpeechletHandlerTest {
         final AlexaClient client = AlexaClient.create(this.getClass().getResourceAsStream("de-DE/singleTranslationOneShot.xml"))
                 .withApplicationId(SkillConfig.getAlexaAppId())
                 .build();
+
         client.startScript();
     }
 

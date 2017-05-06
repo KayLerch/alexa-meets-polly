@@ -1,9 +1,9 @@
 Languages: "[Russisch|Englisch|Spanisch|Italienisch|Türkisch|Polnisch|Portugiesisch|Japanisch|Schwedisch|Norwegisch|Rumanisch|Niederländisch|Dänisch|Französisch]"
 SamplePhrases: "[Guten Tag|Guten Abend|Hallo|Wie geht es dir|Wie heißt du|Bahnhof|Fußball]"
 
-Hello: "[Hallo|Hi|Willkommen|Guten Tag]!"
+Hello: "<say-as interpret-as='interjection'>[aloha,|bonjour,|na?|willkommen,]</say-as>"
 Etwas: "<phoneme alphabet='ipa' ph='ɛtvas'>etwas</phoneme>"
-Sorry: "[Entschuldige|Sorry|Tut mir leid|Upps]"
+Sorry: "<say-as interpret-as='interjection'>[achje|ähm|argh|au weia|huch|oje|schachmatt|schade|verflixt|]</say-as>"
 
 SayWelcome:
   Utterances:
@@ -12,11 +12,11 @@ SayWelcome:
     - "Sage zum Beispiel <p>${SamplePhrases}</p> [auf|in] ${Languages}"
 
 SayTranslate:
-  - "{text} [auf|in] {language} [lautet|bedeutet|heißt|klingt so] {mp3}"
+  - "{text} [auf|in] {language} [bedeutet|heißt|klingt so] {mp3}"
 
 SayTranslateAndElse:
   Utterances:
-    - "{text} [auf|in] {language} [lautet|bedeutet|heißt|klingt so] {mp3} Noch ${Etwas}?"
+    - "{text} [auf|in] {language} [bedeutet|heißt|klingt so] {mp3} <break time='250ms' /> Noch ${Etwas}?"
   Reprompts:
     - "Du kannst mich wiederholen lassen oder etwas anderes übersetzen lassen. Wenn du nicht weiter weißt, frage mich nach Hilfe."
 
@@ -51,7 +51,7 @@ SayNoLanguage:
     - "Frage zum Beispiel Was ist {text}, [auf|in] ${Languages}."
 
 SayOk:
-  - "Ok"
+  - "<say-as interpret-as='interjection'>[ade|alles klar|arrivederci|bis bald|bon voyage|mach's gut|null problemo|tschö|wie du meinst]</say-as>"
 
 SayNothingToRepeat:
   - "${Sorry}, es gibt für mich nichts zum Wiederholen. Sobald ich etwas für dich übersetzt habe, merke ich es mir und wiederhole später gern."

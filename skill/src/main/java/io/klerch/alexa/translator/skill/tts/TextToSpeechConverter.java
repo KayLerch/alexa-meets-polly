@@ -140,7 +140,7 @@ public class TextToSpeechConverter {
             // without a voiceId there's not chance to fulfill the translation request
             Validate.notBlank(voiceId, "No voiceId is associated with given language.");
             // form the SSML by embedding the translated text
-            final String ssml = String.format("<speak><prosody rate='-20%%' volume='x-loud'>%1$s</prosody></speak>", translated.get());
+            final String ssml = String.format("<speak><prosody rate='-15%%' volume='x-loud'>%1$s</prosody></speak>", translated.get());
             // build a Polly request to get speech with desired voice and SSML
             final SynthesizeSpeechRequest synthRequest = new SynthesizeSpeechRequest()
                     .withText(ssml)
