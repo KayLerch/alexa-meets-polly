@@ -31,7 +31,7 @@ SayUnsupportedLanguagesAndElse:
 
 SayTranslateRequest:
   Utterances:
-    - "Gebe mir ein Wort und eine Sprache, in die ich es übersetzen soll."
+    - "Gib mir ein Wort und eine Sprache, in die ich es übersetzen soll."
   Reprompts:
     - "Sage zum Beispiel <p>${SamplePhrases}</p> [auf|in] ${Languages}"
 
