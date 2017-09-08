@@ -7,7 +7,7 @@ This project combines the [Alexa Skills Kit](https://developer.amazon.com/alexa-
 17 different languages.
 
 __Important note__
-Polly released the contrast-parameter and aligned bitrates of audiostreams. This removes the burden of manually converting Polly-mp3 using ffmpeg in order to
+Polly now provides the dynamic range compression SSML-tag and aligned bitrates of audiostreams. This removes the burden of manually converting Polly-mp3 using ffmpeg in order to
 comply with audio setting and volume requirements of Alexa. That being said, step 7 to 9 aren't necessary anymore.
 
 ![](docs/solution-architecture.png)
