@@ -12,11 +12,11 @@ SayWelcome:
     - "Sage zum Beispiel <p>${SamplePhrases}</p> [auf|in] ${Languages}"
 
 SayTranslate:
-  - "{text} [auf|in] {language} [bedeutet|heißt|klingt so] {mp3}"
+  - "{text} [auf|in] {language} [bedeutet|heißt|klingt so] <break time='250ms' /> {mp3}"
 
 SayTranslateAndElse:
   Utterances:
-    - "{text} [auf|in] {language} [bedeutet|heißt|klingt so] {mp3} <break time='250ms' /> Noch ${Etwas}?"
+    - "{text} [auf|in] {language} [bedeutet|heißt|klingt so] <break time='250ms' /> {mp3} <break time='750ms' /> Noch ${Etwas}?"
   Reprompts:
     - "Du kannst mich wiederholen lassen oder etwas anderes übersetzen lassen. Wenn du nicht weiter weißt, frage mich nach Hilfe."
 

@@ -6,19 +6,17 @@
 
     <groupId>io.klerch</groupId>
     <artifactId>alexa.translator.skill</artifactId>
-    <version>1.3.0</version>
+    <version>1.4.0</version>
 
     <properties>
         <maven.surefire.failsafe.version>2.16</maven.surefire.failsafe.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <io.klerch.tellask.version>0.2.2</io.klerch.tellask.version>
+        <io.klerch.tellask.version>0.2.3</io.klerch.tellask.version>
         <io.klerch.tester.version>0.1.1</io.klerch.tester.version>
-        <aws.version>1.11.93</aws.version>
+        <aws.version>1.11.190</aws.version>
         <aws.lambda.version>1.1.0</aws.lambda.version>
         <aws.log4j.version>1.0.0</aws.log4j.version>
         <junit.version>4.12</junit.version>
-        <jackson.version>2.8.2</jackson.version>
-        <alexa-skillskit-version>1.2</alexa-skillskit-version>
     </properties>
 
     <distributionManagement>
@@ -75,26 +73,6 @@
     </build>
 
     <dependencies>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.amazon.alexa</groupId>
-            <artifactId>alexa-skills-kit</artifactId>
-            <version>${alexa-skillskit-version}</version>
-        </dependency>
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-lambda-java-core</artifactId>

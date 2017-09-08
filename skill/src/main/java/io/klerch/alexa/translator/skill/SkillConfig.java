@@ -62,6 +62,10 @@ public class SkillConfig {
         return properties.getProperty("MicrosoftSubscriptionKey");
     }
 
+    public static String getDynamoTableName() {
+        return properties.getProperty("DynamoTableName");
+    }
+
     public static String getTranslatorConvertServiceUrl() {
         return properties.getProperty("TranslatorConvertServiceUrl");
     }

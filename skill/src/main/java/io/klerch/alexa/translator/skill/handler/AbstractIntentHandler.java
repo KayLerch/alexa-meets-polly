@@ -3,12 +3,10 @@ package io.klerch.alexa.translator.skill.handler;
 import com.amazon.speech.ui.Image;
 import com.amazon.speech.ui.StandardCard;
 import io.klerch.alexa.state.handler.AWSDynamoStateHandler;
-import io.klerch.alexa.state.handler.AlexaStateHandler;
 import io.klerch.alexa.state.utils.AlexaStateException;
 import io.klerch.alexa.tellask.model.AlexaInput;
 import io.klerch.alexa.tellask.model.AlexaOutput;
 import io.klerch.alexa.tellask.schema.AlexaIntentHandler;
-import io.klerch.alexa.tellask.schema.type.AlexaOutputFormat;
 import io.klerch.alexa.tellask.util.AlexaRequestHandlerException;
 import io.klerch.alexa.translator.skill.SkillConfig;
 import io.klerch.alexa.translator.skill.model.LastTextToSpeech;
@@ -56,7 +54,7 @@ abstract class AbstractIntentHandler implements AlexaIntentHandler {
         card.setImage(img);
 
         // remember the current tts as last tts of user
-        final AWSDynamoStateHandler dynamoStateHandler = new AWSDynamoStateHandler(input.getSessionStateHandler().getSession());
+        final AWSDynamoStateHandler dynamoStateHandler = new AWSDynamoStateHandler(input.getSessionStateHandler().getSession(), SkillConfig.getDynamoTableName());
         final LastTextToSpeech lastTts = new LastTextToSpeech(tts);
 
         // if no one-shot this conversation keeps open and user can go on with other options

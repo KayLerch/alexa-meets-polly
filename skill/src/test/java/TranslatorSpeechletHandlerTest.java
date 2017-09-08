@@ -1,11 +1,9 @@
-import io.klerch.alexa.test.asset.AlexaAsset;
 import io.klerch.alexa.test.client.AlexaClient;
 import io.klerch.alexa.test.client.endpoint.AlexaEndpoint;
 import io.klerch.alexa.test.client.endpoint.AlexaRequestStreamHandlerEndpoint;
 import io.klerch.alexa.translator.skill.SkillConfig;
 import io.klerch.alexa.translator.skill.TranslatorSpeechletHandler;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import java.util.Locale;
 
@@ -26,8 +24,6 @@ public class TranslatorSpeechletHandlerTest {
 
     @Test
     public void doConversation() throws Exception {
-        final AlexaEndpoint endpoint = AlexaRequestStreamHandlerEndpoint.create(TranslatorSpeechletHandler.class).build();
-
         final AlexaClient client = AlexaClient.create(this.getClass().getResourceAsStream("de-DE/singleTranslationOneShot.xml"))
                 .withApplicationId(SkillConfig.getAlexaAppId())
                 .build();

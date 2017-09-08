@@ -61,7 +61,7 @@ public class TextToSpeechConverter {
         // session state handler to read/write skill state information to Alexa session
         this.sessionStateHandler = input.getSessionStateHandler();
         // dynamo state handler to read/write skill state information to DynamoDB
-        this.dynamoStateHandler = new AWSDynamoStateHandler(input.getSessionStateHandler().getSession());
+        this.dynamoStateHandler = new AWSDynamoStateHandler(input.getSessionStateHandler().getSession(), SkillConfig.getDynamoTableName());
         // retrieve voiceId from YAML file that maps to the language given by the user
         voiceId = language != null ? yamlReader.getRandomUtterance(language.toLowerCase().replace(" ", "_")).orElse("") : "";
         // language-specific prefix phrases that accidently made it into the text slot and should be removed
@@ -140,7 +140,7 @@ public class TextToSpeechConverter {
             // without a voiceId there's not chance to fulfill the translation request
             Validate.notBlank(voiceId, "No voiceId is associated with given language.");
             // form the SSML by embedding the translated text
-            final String ssml = String.format("<speak><prosody rate='-15%%' volume='x-loud'>%1$s</prosody></speak>", translated.get());
+            final String ssml = String.format("<speak><amazon:effect name='drc'><prosody rate='-15%%' volume='x-loud'>%1$s</prosody></amazon:effect><break time='250ms' /></speak>", translated.get());
             // build a Polly request to get speech with desired voice and SSML
             final SynthesizeSpeechRequest synthRequest = new SynthesizeSpeechRequest()
                     .withText(ssml)

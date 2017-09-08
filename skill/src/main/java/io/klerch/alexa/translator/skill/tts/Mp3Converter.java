@@ -2,7 +2,6 @@ package io.klerch.alexa.translator.skill.tts;
 
 import io.klerch.alexa.translator.skill.SkillConfig;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.Validate;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
